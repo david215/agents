@@ -25,7 +25,7 @@ nothing, and the boundaries below become cheap instead of frightening.
 | 2. Write it down | `/to-spec` | `spec.md` |
 | 3. Slice it | `/to-tickets` | `issues/NN-*.md` with blocking edges |
 | 4. Build it | `/implement` | code, commits, `test-report.md` |
-| 5. Harvest it | `/to-durable` | ADRs, known-issues, glossary, agent doc, `## Extracted to` |
+| 5. Harvest it | `/to-durable` | ADRs, known-issues, glossary, agent doc |
 | 6. Publish it | `/pr` | a draft PR, with the report as a comment |
 
 Phase 1 writes ADRs and glossary entries as they crystallise — `/grill-with-docs` runs
@@ -41,7 +41,7 @@ This repo must have been configured, or the phases have nothing to read:
 
 ```
 /setup-matt-pocock-skills    # issue tracker, triage labels, domain docs
-/setup-workflow              # VCS conventions, test commands, findings log
+/setup-workflow              # VCS conventions, test commands, gitignored working directory
 ```
 
 Check `docs/agents/` before starting. If it is missing, stop and run those two — a workflow that
@@ -80,16 +80,38 @@ context problem this skill exists to avoid, wearing a different hat.
 
 ## Capturing as you go
 
-Every phase appends to `findings.md` as things surface — each skill carries its own criteria. The
-discipline that matters here is that capture is **immediate and unjudged**: a finding not written
-within a minute of being noticed is gone, and deciding where it belongs is phase 5's job, done once,
-with the whole feature visible.
+Every phase appends to `.scratch/<feature-slug>/findings.md` as things surface — each skill carries
+its own criteria. The discipline that matters here is that capture is **immediate and unjudged**: a
+finding not written within a minute of being noticed is gone, and deciding where it belongs is phase
+5's job, done once, with the whole feature visible.
 
 ## After the merge
 
-The spec, tickets, and findings log are ephemeral. Deleting them is the repo's own documented
-procedure — `docs/agents/issue-tracker.md` — and it is gated on the `## Extracted to` list that
-phase 5 wrote. Run it after the PR merges, not before.
+`.scratch/<feature-slug>/` is ephemeral and gets deleted. Two checks first, then the `rm`:
+
+```bash
+git fetch origin
+
+# 1. Did it merge? The feature's commits must be on the integration branch.
+git log origin/<integration-branch> --oneline | head -20
+
+# 2. Did the durable files land? Derive them from the merged range — do not work from memory.
+git diff --name-only <merge-base> <merge-commit> -- docs/ CLAUDE.md AGENTS.md CONTEXT.md
+
+# 3. Only when both hold:
+rm -rf .scratch/<feature-slug>
+```
+
+**Step 2 is not optional.** A merge that resolved a conflict by dropping a file leaves you with a
+merged PR and no ADR — and the only remaining copy of that reasoning is in the directory you are
+about to remove.
+
+**There is no recovery.** `.scratch/` is gitignored, so a deleted directory is gone: not in a branch,
+not in a stash, not on the remote. That is the point — a file absent from the repository cannot be
+read stale by anyone on a fresh clone. It is also why the checks run first, every time.
+
+Run this after the PR merges, not before. The procedure is the same whatever the issue tracker is;
+on GitHub, GitLab, or Jira the directory simply holds the working files without the spec and tickets.
 
 ## Anti-goals
 

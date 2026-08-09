@@ -193,8 +193,12 @@ generation-time slip rather than a shell or git bug, so it survives the file-bas
 Treat it as a post-condition to check, not an assumption:
 
 ```bash
-git log -1 --format='%B' | grep -P '\x{FFFD}'
+git log -1 --format='%B' | LC_ALL=C grep -q $'\xef\xbf\xbd'
 ```
+
+Match U+FFFD as its raw UTF-8 bytes rather than with `grep -P '\x{FFFD}'`: BSD grep has no `-P` and
+exits **2** on it, which is not the exit 1 that means "no match" — so the PCRE form silently stops
+checking anything on macOS while still looking like it ran.
 
 On a match, **do not report success**: the commit exists but its message is corrupted. Fix it
 immediately with `git commit --amend -F <corrected-file>`, then re-run the check. This is repairing

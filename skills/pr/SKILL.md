@@ -168,6 +168,55 @@ If no route has caller-visible change, omit the group. Do not manufacture one.
 - Claim no effect the diff does not show, and no test run the user did not report.
 - State an assumption in one line where the branch reads more than one way.
 
+### The test section is a pointer, never content
+
+Everything about tests belongs in a **comment**: which spec files moved, and what happened when they
+ran. The body only points at it.
+
+The reason is staleness, not size. A description is the PR's standing summary of what the branch
+does; a test report is a point-in-time artifact that a single further push invalidates. Buried in the
+description it becomes a table every reviewer scrolls past forever. On Azure DevOps the description
+cap forces this anyway; on GitHub nothing forces it and it is still correct.
+
+**Resolve the report before writing this section** — whether it exists decides what you may check.
+
+```bash
+ls .scratch/<feature-slug>/test-report.md      # slug = branch name minus any <type>/ prefix
+git log -1 --format=%cI                        # newest commit, for the staleness check
+```
+
+`/test-report` writes that file; this skill does not run tests and does not compose the table. A
+report older than the newest commit describes code no longer on the branch — say so and ask rather
+than posting it, because a stale table carries more authority than no table, which is the thing this
+whole arrangement exists to avoid.
+
+A template's test items are part of the contract — they cannot be deleted, and leaving them blank
+reads as unconsidered. Fill each with a pointer, in the repo's prose language:
+
+```
+- [x] 테스트 변경 사항
+  > 변경된 스펙 파일 목록은 아래 테스트 리포트 코멘트 참고
+
+- [x] 로컬 테스트가 수행되었나요?
+  > 실행 결과는 아래 테스트 리포트 코멘트 참고
+```
+
+Every test item gets the same treatment — the one asking which files changed and the one asking
+whether they ran both resolve to the same comment, so neither carries content of its own.
+
+No anchor or link is needed. Both hosts render comments directly beneath the description, so "see the
+comment below" resolves itself — which is why the body can be finished here, before the comment
+exists, with no second update call to insert a URL.
+
+**Never write the content in both places.** A body listing spec files and a comment listing them
+again drift on the next push, and the body is the copy nobody updates.
+
+**The report is what licenses a checkbox.** Check an item only for what the report actually shows:
+the diff proves spec files changed, so that box gets checked; whether a local run happened is known
+only if the report says so. **No report file?** Do not invent one and do not check any test box —
+say `/test-report` has not run for this branch and leave the items with their original placeholders.
+A pointer to a comment that will not exist is worse than an honest blank.
+
 ### User overrides
 
 Natural-language instructions in the same message constrain **what to describe**, never git history.
@@ -182,8 +231,10 @@ misled otherwise.
 ## Step 5 — Check the length, then push
 
 Host modules carry the limits; Azure DevOps has a hard description cap that will silently truncate.
-Measure with `wc -m`, never `wc -c` — multi-byte prose runs three bytes per character and a byte
-count will make you cut a body that fits.
+Measure with `LC_ALL=en_US.UTF-8 wc -m`, never `wc -c` — multi-byte prose runs three bytes per
+character and a byte count will make you cut a body that fits. **The locale prefix is the measurement:**
+under `LC_ALL=C` or `POSIX` — the default in Docker, cron, and most CI — `wc -m` counts bytes too, so
+the bare command fails in the same direction as `wc -c` while looking like the fix.
 
 Over budget means a label is mis-grained. Go back to Step 4 and merge, rather than abbreviating
 prose into shorthand.
@@ -204,72 +255,21 @@ Commands are in the host module.
 Open as a draft when `vcs.md` says draft. Never pass auto-complete, policy bypass, squash, or
 delete-source-branch flags — those are merge-time decisions for the human who publishes the PR.
 
-## Step 7 — Test content goes in a comment; the body points at it
+## Step 7 — Post the report as a comment
 
-Everything about tests belongs in a **comment**: which spec files moved, and what happened when they
-ran. Never the description.
-
-The reason is staleness, not size: a description is the PR's standing summary of what the branch
-does, while a test report is a point-in-time artifact that a single further push invalidates. Buried
-in the description it becomes a table every reviewer scrolls past forever. On Azure DevOps the
-description limit forces this anyway; on GitHub nothing forces it and it is still correct.
+Post `.scratch/<feature-slug>/test-report.md` verbatim. Step 4 already resolved it, checked it for
+staleness, and decided which boxes the body may check — if it found no report, there is nothing to
+post and this step is a no-op.
 
 **Update the existing report comment rather than posting another**, unless the result changed in a
 way reviewers should be re-notified about. Comments notify and description edits do not — which is
 what makes a comment the right home, and also what makes re-posting on every push spam.
 
-### Finding the report
+Write every path in full, one per line. Compressed file lists (`spec/{a,b}.unit.spec.ts`) only ever
+existed to buy characters against the description cap; a comment has ~37× as many on Azure DevOps and
+no practical limit on GitHub, and a full path is greppable and clickable.
 
-`/test-report` writes `<feature-directory>/test-report.md` — the same directory as the spec and
-`findings.md`. That file is the handoff; this skill does not run tests and does not compose the
-table.
-
-**Check it is not stale before posting.** Compare its modification time against the branch's last
-commit:
-
-```bash
-git log -1 --format=%cI
-```
-
-A report older than the newest commit describes code that is no longer on the branch. Say so and
-ask, rather than posting it — a stale table carries more authority than no table, which is exactly
-why staleness is the thing this whole arrangement is built to avoid.
-
-No report file? Do not invent one, and do not check the template's test boxes. Say that
-`/test-report` has not run for this branch and leave those items with their placeholders.
-
-### The template's test section still gets filled
-
-A template's test items are part of the contract — they cannot be deleted, and leaving them blank
-reads as unconsidered. Fill each one with a **pointer**, in the repo's prose language:
-
-```
-- [x] 테스트 변경 사항
-  > 변경된 스펙 파일 목록은 아래 테스트 리포트 코멘트 참고
-
-- [x] 로컬 테스트가 수행되었나요?
-  > 실행 결과는 아래 테스트 리포트 코멘트 참고
-```
-
-Every test item in the section gets the same treatment — the one asking which files changed and the
-one asking whether they ran both resolve to the same comment, so neither carries content of its own.
-
-The pointer needs no anchor or link. Both hosts render comments directly beneath the description, so
-"see the comment below" resolves itself — which also means the body can be written in Step 6 before
-the comment exists in this step, with no second update call to insert a URL.
-
-**Never write the content in both places.** A body listing spec files and a comment listing them
-again drift on the next push, and the body is the copy nobody updates.
-
-**The comment is what licenses a checkbox.** Check an item only for what the report actually shows:
-the diff proves spec files changed, so that box gets checked; whether a local run happened is known
-only if the report says so. With no test report in this run, leave the items unchecked with their
-original placeholders and put nothing in the comment — a pointer to a comment that does not exist is
-worse than an honest blank.
-
-This is also what makes full paths affordable. Compressed file lists (`spec/{a,b}.unit.spec.ts`)
-existed to buy characters against the description cap. In a comment there are ~37× as many on Azure
-DevOps and no practical limit on GitHub, so write every path in full, one per line.
+Commands are in the host module.
 
 ## Step 8 — Report back
 

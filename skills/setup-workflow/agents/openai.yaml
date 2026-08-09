@@ -1,0 +1,5 @@
+interface:
+  display_name: "Setup Workflow"
+  short_description: "Configure a repo for the /workflow orchestration"
+policy:
+  allow_implicit_invocation: false

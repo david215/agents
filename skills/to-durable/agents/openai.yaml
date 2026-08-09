@@ -1,0 +1,5 @@
+interface:
+  display_name: "To Durable"
+  short_description: "Harvest a feature's findings into the repo's durable docs"
+policy:
+  allow_implicit_invocation: true

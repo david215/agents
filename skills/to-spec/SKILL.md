@@ -77,8 +77,12 @@ Any further notes about the feature.
 
 Exploring the codebase to write a spec turns up things the spec has no place for — a defect in a
 neighbouring module, a constraint the design has to route around, a surprise about how the existing
-code behaves. Append each to the feature's findings log as it surfaces, tagged `[spec]`. See
-`docs/agents/findings.md` for the path and line format.
+code behaves. Append each to `.scratch/<feature-slug>/findings.md` as it surfaces, one line, newest
+last:
+
+```
+- <what you found> — <where it bites> [spec]
+```
 
 The spec describes what is being built; the log holds what you learned while working out how. Do not
 inflate the spec with either the defect or its analysis, and do not stop to decide where the finding

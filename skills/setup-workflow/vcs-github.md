@@ -23,9 +23,9 @@ e.g. "`<type>/<slug>` — `feat/`, `fix/`, `refactor/`, matching the Conventiona
 Or "No convention — branches are named freely."
 -->
 
-`/pr` creates branches to this pattern. `/to-durable` reads it in reverse, stripping the prefix to
-recover the feature slug that names the spec directory — so a repo with no convention should say so
-plainly, and the whole branch name becomes the slug.
+`/to-durable` and `/test-report` read this in reverse, stripping the prefix to recover the feature
+slug that names the working directory — so a repo with no convention should say so plainly, and the
+whole branch name becomes the slug.
 
 ## Language
 

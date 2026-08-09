@@ -35,8 +35,8 @@ See the test report comment below.
 "checked and clear" when it usually means "not checked".
 
 **`Tests` is a pointer, never content.** Both the changed spec files and the run results live in the
-comment — see Step 7. With no test report in this run, drop the section rather than pointing at a
-comment that does not exist.
+comment — see Step 4's *The test section is a pointer, never content*. With no test report in this
+run, drop the section rather than pointing at a comment that does not exist.
 
 In the comment, write **one path per line, in full**. Do not compress shared prefixes into brace
 expansion (`spec/{a,b}.unit.spec.ts`) or any other shorthand — a full path is greppable, clickable

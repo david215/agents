@@ -111,20 +111,20 @@ Prose around the table follows the language of the request; the table itself sta
 
 ## Where the report goes
 
-Print it, **and write it to `<feature-directory>/test-report.md`** — the same per-feature directory
-the spec and `findings.md` live in, per `docs/agents/issue-tracker.md`. Overwrite any previous
-report; the current run is the only one that matters.
+Print it, **and write it to `.scratch/<feature-slug>/test-report.md`** — the same working directory
+`findings.md` lives in. Derive the slug from the branch name with any `<type>/` prefix stripped;
+create the directory if it does not exist. Overwrite any previous report; the current run is the only
+one that matters.
 
-That file is the handoff. `/pr` Step 7 reads it and posts it as a comment — and it has to be a file,
-not context, because `/implement` runs this skill at the end of a feature while `/pr` runs later,
+That directory exists on every repo whatever the issue tracker is, which is the point — a path that
+only resolved on a local-markdown tracker would make this handoff silently do nothing everywhere else.
+
+That file is the handoff. `/pr` reads it and posts it as a comment — and it has to be a file, not
+context, because `/implement` runs this skill at the end of a feature while `/pr` runs later,
 frequently across a context reset. A report that exists only in the transcript is a report `/pr`
 cannot find.
 
 Print the path in the summary line so the handoff is visible.
-
-If no feature directory resolves — this skill run standing alone, outside a feature — write to a
-scratch path and say where. Nothing downstream will pick it up automatically, which is the correct
-outcome for a report with no feature to attach to.
 
 Do not write the report to the PR description, and do not render it to an image. Both are artifacts
 of a character limit that a comment does not have.

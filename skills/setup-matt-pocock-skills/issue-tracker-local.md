@@ -22,27 +22,15 @@ Specs and tickets are extracted, then deleted. Nothing in `.scratch/` survives i
 
 **Before the PR — extract.** Run `/to-durable` on the feature branch. It reads the findings log, the
 spec, and the tickets, and proposes what must move somewhere durable, so the extraction rides in the
-same diff as the code it explains. It then appends an **`## Extracted to`** list to `spec.md` naming
-every durable file it produced. That list is the handoff to deletion.
+same diff as the code it explains.
 
-**After the merge — delete.** Documented rather than scripted, because it is a check and an `rm`:
-
-```bash
-# 1. Confirm on the integration branch that every path in spec.md's "Extracted to" list is present.
-git fetch origin
-git ls-tree -r origin/<integration-branch> --name-only | grep -F -e <path> -e <path>
-
-# 2. Only if step 1 accounts for every listed file:
-rm -rf .scratch/<feature-slug>
-```
-
-**Step 1 is not optional.** It covers both preconditions at once: if a listed file is absent from the
-integration branch, either the extraction never ran or the PR has not merged — and in both cases you
-do not delete.
+**After the merge — delete.** The procedure lives in the `/workflow` skill, not here. It is identical
+on every tracker, because `.scratch/<feature-slug>/` exists on every tracker; what differs on this one
+is only how much sits inside it — the spec and tickets as well as the working files.
 
 **There is no recovery.** `.scratch/` is gitignored, so a deleted directory is gone: not in a branch,
 not in a stash, not on the remote. That is the point — a file absent from the repository cannot be
-read stale by anyone on a fresh clone. It is also why the check runs first, every time.
+read stale by anyone on a fresh clone. It is also why the procedure checks before it removes.
 
 ## When a skill says "publish to the issue tracker"
 

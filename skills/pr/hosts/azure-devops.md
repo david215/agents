@@ -30,12 +30,16 @@ Treat **3,900 as the description ceiling**, not a target. Measure before creatin
 
 ```bash
 printf '%s' "<body>" > <scratch>/pr-body.txt
-wc -m < <scratch>/pr-body.txt
+LC_ALL=en_US.UTF-8 wc -m < <scratch>/pr-body.txt
 ```
 
 `wc -m`, never `wc -c`. Korean runs three bytes per character, so a byte count reads roughly triple
 and will make you cut a body that fits. Over 3,900 means a label is mis-grained — merge, then
 re-measure. Delete the file afterwards.
+
+**Keep the locale prefix.** `wc -m` counts characters only in a UTF-8 locale; under `LC_ALL=C` or
+`POSIX` it counts bytes, so the bare command silently becomes the `wc -c` this section warns
+against — measured on macOS, `한글테스트` returns 5 with a UTF-8 locale and 15 without.
 
 Comments are ~37× larger, which is why the test report goes there.
 
@@ -74,7 +78,7 @@ There is no `az repos pr comment` subcommand. Reach the REST API directly:
 ```bash
 az devops invoke --area git --resource pullRequestThreads --http-method POST \
   --route-parameters project=<project> repositoryId=<repo> pullRequestId=<id> \
-  --api-version 7.1 --in-file <scratch>/comment.json   # body built from <feature-directory>/test-report.md
+  --api-version 7.1 --in-file <scratch>/comment.json   # body built from .scratch/<feature-slug>/test-report.md
 ```
 
 To update an existing report comment instead of adding a thread, GET the threads first and PATCH the

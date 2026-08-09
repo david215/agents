@@ -26,11 +26,15 @@ feature, on the feature branch.
 ### 1. Resolve the feature
 
 Derive the slug from the current branch name with any `<type>/` prefix stripped —
-`fix/duplicate-payments` → `duplicate-payments`. Check it against the issue tracker's directories.
+`fix/duplicate-payments` → `duplicate-payments` — and check it against `.scratch/`.
 
 If the argument was given, use that instead. If neither resolves to a real directory, **list what is
 actually there and ask** — do not guess. A branch can predate the naming convention, or cover two
 features.
+
+`.scratch/<feature-slug>/` exists on every repo whatever the tracker is: it holds the findings log and
+the test report. Whether the spec and tickets are in there too, or are issues on GitHub or Jira, is
+the tracker's business — read `docs/agents/issue-tracker.md` for that.
 
 ### 2. Report readiness, then confirm
 
@@ -43,7 +47,7 @@ the time. Show the user what you found and let them decide.
 
 ### 3. Survey
 
-**Read `findings.md` first** — the feature's findings log, beside the spec. It is the primary input,
+**Read `.scratch/<feature-slug>/findings.md` first** — the findings log. It is the primary input,
 because it is the only file written *at the moment* something surprised someone. Everything else here
 is reconstruction: the spec describes what was intended, the tickets what was planned, and both were
 written before the surprises happened.
@@ -123,34 +127,28 @@ someone who looked at it.
 A finding that is no longer true — fixed in this branch, or wrong when written — is marked `→
 dropped` with the reason, never silently removed.
 
-### 6. Handoff
+### 6. Report
 
-Append to the spec:
+Name the durable files written, and stop. There is no manifest to append anywhere.
 
-<extracted-to>
+Deletion happens after the merge and needs no list from you: the durable files this feature produced
+are derivable from the merged range, so writing them down would be a cache of a one-command lookup.
 
-## Extracted to
+```bash
+git diff --name-only <merge-base> <merge-commit> -- docs/ CLAUDE.md AGENTS.md CONTEXT.md
+```
 
-- `<path>` — one line on what went there
-- `<path>` — …
-
-</extracted-to>
-
-This list is what makes deletion safe. The repo's deletion procedure confirms every path here is
-present on the integration branch before removing the directory — one check that covers both "did
-the extraction run" and "did the PR merge". If the repo has no such procedure documented, say so and
-suggest adding one; do not delete anything yourself.
+`/workflow`'s *After the merge* section owns that procedure.
 
 ## Repo conventions win
 
 Read the repo's own agent documentation first if it has any — an issue-tracker doc for where specs
-and tickets live and what the deletion procedure is, a domain doc for ADR location and numbering, a
-findings doc for the log's path and line format. Where the repo states a convention, follow it. This
-skill supplies the method; the repo supplies the file layout.
+and tickets live, a domain doc for ADR location and numbering. Where the repo states a convention,
+follow it. This skill supplies the method; the repo supplies the file layout.
 
 Where the repo says nothing: ADRs in `docs/adr/` numbered sequentially, known issues in
-`docs/known-issues.md`, glossary in `CONTEXT.md`, hazards in `CLAUDE.md` or `AGENTS.md`, findings log
-at `<feature-directory>/findings.md`.
+`docs/known-issues.md`, glossary in `CONTEXT.md`, hazards in `CLAUDE.md` or `AGENTS.md`. The findings
+log is always `.scratch/<feature-slug>/findings.md` — that one is not a repo convention.
 
 ADR *length* is not a repo convention — anti-inference governs it everywhere, from
 `/domain-modeling`'s `ADR-FORMAT.md`.
