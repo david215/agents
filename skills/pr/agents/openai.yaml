@@ -1,0 +1,5 @@
+interface:
+  display_name: "PR"
+  short_description: "Open or update a pull request from the branch's committed work"
+policy:
+  allow_implicit_invocation: true

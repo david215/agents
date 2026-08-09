@@ -34,6 +34,15 @@ Commit subjects and PR bodies are written in **<LANGUAGE>**.
 Conventional Commit types stay English and lowercase (`feat`, `fix`, `refactor`, …) regardless of
 the prose language.
 
+## PR title
+
+<PR_TITLE_CONVENTION>
+
+<!--
+Frequently NOT the commit convention. e.g. "A plain descriptive phrase, no Conventional Commit
+prefix." Or "Same as the commit subject."
+-->
+
 ## Commit scopes
 
 <SCOPES>
