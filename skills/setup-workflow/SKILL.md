@@ -101,6 +101,10 @@ Then add to the `## Agent skills` block in whichever of `CLAUDE.md` / `AGENTS.md
 
 [one line on how suites are run here]. See `docs/agents/testing.md`.
 
+[A guardrail line, only if a Section B answer named something whose violation causes damage — worded
+so the wording itself does the triggering: "Never run the whole suite locally; it can exhaust memory
+and take the machine down."]
+
 ### Findings log
 
 Defects and gotchas found mid-feature land in [path] as they surface. See `docs/agents/findings.md`.

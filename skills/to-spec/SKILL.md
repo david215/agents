@@ -72,3 +72,14 @@ A description of the things that are out of scope for this spec.
 Any further notes about the feature.
 
 </spec-template>
+
+## Capture as you go
+
+Exploring the codebase to write a spec turns up things the spec has no place for — a defect in a
+neighbouring module, a constraint the design has to route around, a surprise about how the existing
+code behaves. Append each to the feature's findings log as it surfaces, tagged `[spec]`. See
+`docs/agents/findings.md` for the path and line format.
+
+The spec describes what is being built; the log holds what you learned while working out how. Do not
+inflate the spec with either the defect or its analysis, and do not stop to decide where the finding
+eventually belongs — `/to-durable` does that once, at the end, with the whole feature visible.

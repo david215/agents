@@ -1,6 +1,6 @@
 ---
 name: to-durable
-description: Harvest the durable value out of a feature's ephemeral spec and tickets, before the PR — decisions into ADRs, findings into a known-issues file, vocabulary into the glossary.
+description: Harvest the durable value out of a feature's ephemeral findings log, spec, and tickets, before the PR — decisions into ADRs, defects into a known-issues file, vocabulary into the glossary, operating hazards into the agent doc.
 argument-hint: "[feature-slug]"
 ---
 
@@ -43,37 +43,62 @@ the time. Show the user what you found and let them decide.
 
 ### 3. Survey
 
-Read the spec and **every** ticket, in full. The spec is usually the merged record, but tickets
-accumulate implementation notes the spec never absorbed — a measurement, a reverted approach, a
-defect found in passing. Those notes are frequently the most valuable thing in the directory, and
-they are the first thing lost.
+**Read `findings.md` first** — the feature's findings log, beside the spec. It is the primary input,
+because it is the only file written *at the moment* something surprised someone. Everything else here
+is reconstruction: the spec describes what was intended, the tickets what was planned, and both were
+written before the surprises happened.
+
+Then read the spec and **every** ticket, in full. Tickets accumulate implementation notes the spec
+never absorbed — a measurement, a reverted approach, a defect found in passing. Those notes are
+frequently the most valuable thing in the directory, and the first thing lost.
+
+A findings log with entries already marked `→ <destination>` has been curated before. Those are
+done; work the unmarked ones.
 
 ### 4. Propose, then stop
 
-Three categories. Propose concrete entries for each, then **stop and wait for approval** — deletion
+Four categories. Propose concrete entries for each, then **stop and wait for approval** — deletion
 downstream is irreversible, so a bad extraction cannot be corrected later.
 
-**Decisions → an ADR.** Apply one test per paragraph:
+**Decisions → an ADR.** Write to **anti-inference**: an ADR earns its length only by carrying what a
+reader cannot infer from the code in front of them.
 
 > Would a competent reader, working from the code alone, independently arrive at the opposite?
 
-If no, cut it. Keep the decision itself; each rejected alternative someone will genuinely
-re-propose, with the reason it loses; constraints invisible in the code (a client keying on a
-particular status code, a column bound, a measurement); and deliberate omissions worth not "fixing"
-later by accident. Cut motivation and history — nobody is going to re-introduce the bug — along with
-rejected options nobody would raise again, and anything a name, a type, or a test already says.
+If no, cut it. The full keep/cut lists and the two corollaries live in `/domain-modeling`'s
+`ADR-FORMAT.md`, which governs every ADR this project writes — follow it rather than a second copy
+of the rule here.
 
-The highest-value thing an ADR can hold is a decision that reasoning actively **fights** — where the
-textbook answer is the wrong one here. Spend words there and nowhere else.
-
-**Findings → a known-issues file.** Defects and accepted coverage gaps discovered while building and
+**Defects → a known-issues file.** Defects and accepted coverage gaps discovered while building and
 deliberately not fixed. Not design rationale, and not a backlog. These are silently lost otherwise,
 because nothing else records them: a bug in a neighbouring module, a check that could not be
 verified, a test the team decided not to write and the consequence they accepted.
 
 **Vocabulary → the glossary.** Terms the feature introduced or sharpened, in whatever format the
 glossary already uses. Terms the spec used consistently but the glossary never defined are the ones
-to look for.
+to look for. General programming concepts do not belong there however heavily the project uses them
+— the glossary is domain language only.
+
+**Operating hazards → the repo's agent doc.** A fact about the tooling or environment that will
+mislead the next agent, as opposed to a fact about our design or our defects. Its tell is that the
+fix is a warning rather than a ticket: nobody is going to "fix" the ORM that drops an `undefined`
+filter key instead of matching nothing.
+
+This bucket is **residual** — check `docs/agents/` first and route to whichever file already owns the
+subject. Test constraints belong in `testing.md`, VCS conventions in `vcs.md`. Only what no existing
+doc owns lands in `CLAUDE.md` / `AGENTS.md`, and then **co-located with the section it concerns**
+rather than in a gotchas pile, because a hazard collected into a list is one nobody reads at the
+moment it would have helped.
+
+Two further rules for this bucket:
+
+- **A hazard whose violation causes damage is one entry in two halves.** A guardrail line goes in the
+  always-loaded agent doc — worded so the wording itself does the triggering — and the detail goes in
+  the `docs/agents/` file that owns the subject. Not duplication: the guardrail carries the trigger,
+  the body carries the detail. An agent can run the destructive command at any moment, including one
+  where it never opened the detail file.
+- **Length gates the destination.** Short and firing unpredictably → always-loaded. Long, or scoped
+  to one activity you can name → behind a pointer in `docs/agents/`.
 
 ### 5. Write
 
@@ -82,6 +107,21 @@ result so it rides in the PR rather than trailing it.
 
 If a decision belongs in an ADR that already exists, extend that ADR rather than adding a second one
 on the same subject.
+
+**Mark each extracted finding in place**, appending its destination to the line rather than deleting
+it:
+
+```
+- Prisma drops an `undefined` filter key … [implement] → CLAUDE.md
+```
+
+Two reasons. A second run is then idempotent — it can tell settled from unhandled without re-reading
+every destination file. And the log stays a complete record of what was found, which is what makes
+an *unmarked* line at merge time meaningful: it was judged not worth keeping, deliberately, by
+someone who looked at it.
+
+A finding that is no longer true — fixed in this branch, or wrong when written — is marked `→
+dropped` with the reason, never silently removed.
 
 ### 6. Handoff
 
@@ -104,12 +144,16 @@ suggest adding one; do not delete anything yourself.
 ## Repo conventions win
 
 Read the repo's own agent documentation first if it has any — an issue-tracker doc for where specs
-and tickets live and what the deletion procedure is, a domain doc for ADR location, numbering, and
-length. Where the repo states a convention, follow it. This skill supplies the method; the repo
-supplies the file layout.
+and tickets live and what the deletion procedure is, a domain doc for ADR location and numbering, a
+findings doc for the log's path and line format. Where the repo states a convention, follow it. This
+skill supplies the method; the repo supplies the file layout.
 
 Where the repo says nothing: ADRs in `docs/adr/` numbered sequentially, known issues in
-`docs/known-issues.md`, glossary in `CONTEXT.md`.
+`docs/known-issues.md`, glossary in `CONTEXT.md`, hazards in `CLAUDE.md` or `AGENTS.md`, findings log
+at `<feature-directory>/findings.md`.
+
+ADR *length* is not a repo convention — anti-inference governs it everywhere, from
+`/domain-modeling`'s `ADR-FORMAT.md`.
 
 ## Anti-goals
 
@@ -120,3 +164,6 @@ Where the repo says nothing: ADRs in `docs/adr/` numbered sequentially, known is
   and the code copy is the one nobody updates.
 - **Do not pad to look thorough.** A feature with one real decision gets one short ADR, no
   known-issues entries, and no new vocabulary. That is a successful run.
+- **Do not write a finding to two destinations.** Each line gets exactly one home. A defect that is
+  also a hazard is a defect; a hazard that is also a test constraint belongs to `testing.md`. Pick
+  the one an affected reader would look in, and only then consider whether a guardrail line is owed.

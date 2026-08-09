@@ -62,13 +62,20 @@ have frozen a document whose twenty-odd targets keep moving, most of which aren'
 | Skill | Change | Why |
 | --- | --- | --- |
 | `grill-me` | dropped `disable-model-invocation` | so `/workflow` can invoke it |
-| `grill-with-docs` | dropped `disable-model-invocation` | ″ |
-| `to-spec` | dropped `disable-model-invocation` | ″ |
-| `to-tickets` | dropped `disable-model-invocation` | ″ |
-| `implement` | `disable-model-invocation: false`; `/test-report` at the end; commit via `/commit` | ″, plus wiring to the owned skills |
+| `grill-with-docs` | ″, plus a **Capture as you go** section | ″, plus findings-log capture |
+| `to-spec` | ″ | ″ |
+| `to-tickets` | ″ | ″ |
+| `implement` | ″, plus `/test-report` at the end and commit via `/commit` | ″, plus wiring to the owned skills |
+| `domain-modeling` | `ADR-FORMAT.md` gains **Length: anti-inference only** | ADRs written mid-feature were otherwise ungoverned |
+| `setup-matt-pocock-skills` | `issue-tracker-local.md` gains ephemerality, lifecycle, and the guarded deletion procedure; `domain.md` gains an ADR-length pointer | `.scratch/` is worthless as an ephemeral layer if nothing ever extracts from it or deletes it |
 
 The five `agents/openai.yaml` files carry a matching `allow_implicit_invocation: true`, which
 upstream leaves `false` — without it the frontmatter change is contradicted for non-Claude agents.
+
+**Seven of these are body edits, not frontmatter.** Reviewing upstream is a merge exercise now, not
+a glance at four one-line diffs. That is the deliberate price of putting writing rules in skills
+rather than in seeds: a rule shipped inside a seed can never be improved for a repo already set up,
+because generated repo docs are repo-owned and never re-sync.
 
 ## Per-repo setup
 

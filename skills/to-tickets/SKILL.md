@@ -102,3 +102,14 @@ The end-to-end behaviour this ticket makes work, from the user's perspective —
 </issue-template>
 
 In either form, avoid specific file paths or code snippets — they go stale fast. Exception: if a prototype produced a snippet that encodes a decision more precisely than prose can (state machine, reducer, schema, type shape), inline it and note briefly that it came from a prototype. Trim to the decision-rich parts — not a working demo, just the important bits.
+
+## Capture as you go
+
+Slicing work into tickets exposes things no ticket should carry — a prefactor that turned out to be
+unsafe, a coupling that makes a clean slice impossible, a module whose test coverage will not support
+the change. Append each to the feature's findings log as it surfaces, tagged `[tickets]`. See
+`docs/agents/findings.md` for the path and line format.
+
+A finding is not a ticket. A ticket is work someone will do; a finding is something true that nobody
+is acting on right now. Filing the second as the first is how a backlog fills with items nobody
+scheduled.

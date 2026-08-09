@@ -26,6 +26,11 @@ genuinely has no gotchas.
 
 - `<CONSTRAINT>`
 
+**A constraint whose violation causes damage also gets a one-line guardrail in `CLAUDE.md` /
+`AGENTS.md`**, pointing here for the detail. This file is reached deliberately, before a run;
+a destructive command can be typed at any moment by an agent that never opened it. The guardrail
+carries the trigger, this file carries the detail — one entry in two halves, not two copies.
+
 ## Scoping a run
 
 Run only the specs the change actually touches. Scope by **file**, not by directory — a bare

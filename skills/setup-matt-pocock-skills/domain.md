@@ -38,6 +38,12 @@ Multi-context repo (presence of `CONTEXT-MAP.md` at the root):
         └── docs/adr/
 ```
 
+## ADR length
+
+Governed by **anti-inference**, in `/domain-modeling`'s `ADR-FORMAT.md`. It is a writing rule, not a
+repo setting, so it is deliberately not restated here — a copy in this file could never be improved
+for repos already set up.
+
 ## Use the glossary's vocabulary
 
 When your output names a domain concept (in an issue title, a refactor proposal, a hypothesis, a test name), use the term as defined in `CONTEXT.md`. Don't drift to synonyms the glossary explicitly avoids.

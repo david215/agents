@@ -14,6 +14,29 @@ Create the `docs/adr/` directory lazily — only when the first ADR is needed.
 
 That's it. An ADR can be a single paragraph. The value is in recording *that* a decision was made and *why* — not in filling out sections.
 
+## Length: anti-inference only
+
+Most decisions need no more than that paragraph. Where an ADR runs longer, every paragraph must pass
+one test:
+
+> **Would a competent reader, working from the code alone, independently arrive at the opposite?**
+
+If no, cut it. This is **anti-inference**: an ADR earns its length only by carrying what a reader
+cannot infer from the code in front of them. Applied honestly it makes an ADR both shorter and more
+useful, because every surviving line prevents a specific mistake.
+
+**Keep:** the decision itself; each rejected alternative someone will genuinely re-propose, with the
+reason it loses; constraints invisible in the code (a client keying on a particular status code, a
+column bound, a measurement); and deliberate omissions worth not "fixing" later by accident.
+
+**Cut:** motivation and history — nobody is going to re-introduce the bug; rejected options nobody
+would raise again; and anything a name, a type, or a test already says.
+
+Two corollaries. A decision that reasoning actively **fights** — where the textbook answer is the
+wrong one here — is the highest-value thing an ADR can hold, so spend words there and nowhere else.
+And point at an ADR from code in **one line**; never restate its argument at the call site. Two
+copies drift, and the code copy is the one nobody updates.
+
 ## Optional sections
 
 Only include these when they add genuine value. Most ADRs won't need them.
