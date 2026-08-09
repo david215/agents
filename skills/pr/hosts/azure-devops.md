@@ -74,7 +74,7 @@ There is no `az repos pr comment` subcommand. Reach the REST API directly:
 ```bash
 az devops invoke --area git --resource pullRequestThreads --http-method POST \
   --route-parameters project=<project> repositoryId=<repo> pullRequestId=<id> \
-  --api-version 7.1 --in-file <scratch>/comment.json
+  --api-version 7.1 --in-file <scratch>/comment.json   # body built from <feature-directory>/test-report.md
 ```
 
 To update an existing report comment instead of adding a thread, GET the threads first and PATCH the

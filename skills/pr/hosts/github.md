@@ -47,13 +47,13 @@ gh pr edit <number> --title "<title>" --body-file <scratch>/pr-body.md
 ## Post a comment
 
 ```bash
-gh pr comment <number> --body-file <scratch>/report.md
+gh pr comment <number> --body-file <feature-directory>/test-report.md
 ```
 
 To update the existing report comment rather than adding another:
 
 ```bash
-gh pr comment <number> --edit-last --body-file <scratch>/report.md
+gh pr comment <number> --edit-last --body-file <feature-directory>/test-report.md
 ```
 
 `--edit-last` only edits a comment authored by the current account; if the last comment is someone

@@ -1,0 +1,5 @@
+interface:
+  display_name: "Test Report"
+  short_description: "Run the suites a branch touches and table the results"
+policy:
+  allow_implicit_invocation: true

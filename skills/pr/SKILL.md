@@ -218,7 +218,25 @@ description limit forces this anyway; on GitHub nothing forces it and it is stil
 way reviewers should be re-notified about. Comments notify and description edits do not — which is
 what makes a comment the right home, and also what makes re-posting on every push spam.
 
-`/test-report` produces the content; this skill decides where it lands.
+### Finding the report
+
+`/test-report` writes `<feature-directory>/test-report.md` — the same directory as the spec and
+`findings.md`. That file is the handoff; this skill does not run tests and does not compose the
+table.
+
+**Check it is not stale before posting.** Compare its modification time against the branch's last
+commit:
+
+```bash
+git log -1 --format=%cI
+```
+
+A report older than the newest commit describes code that is no longer on the branch. Say so and
+ask, rather than posting it — a stale table carries more authority than no table, which is exactly
+why staleness is the thing this whole arrangement is built to avoid.
+
+No report file? Do not invent one, and do not check the template's test boxes. Say that
+`/test-report` has not run for this branch and leave those items with their placeholders.
 
 ### The template's test section still gets filled
 
