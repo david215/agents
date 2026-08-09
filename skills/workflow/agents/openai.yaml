@@ -1,0 +1,5 @@
+interface:
+  display_name: "Workflow"
+  short_description: "Run a feature end to end, resetting context at each phase boundary"
+policy:
+  allow_implicit_invocation: false
