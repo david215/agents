@@ -1,0 +1,5 @@
+interface:
+  display_name: "Commit"
+  short_description: "Screen for secrets, then make a real Conventional Commit"
+policy:
+  allow_implicit_invocation: true
