@@ -17,6 +17,8 @@ Check with the user that these seams match their expectations.
 
 3. Write the spec using the template below, then publish it to the project issue tracker. Apply the `ready-for-agent` triage label - no need for additional triage.
 
+4. Check the feature slug against the spec you just wrote. `.scratch/<feature-slug>/` was named before anything was known, and a grilling routinely overturns the mechanism a slug was named after. The spec is the first artifact stating what is actually being built, and it lands before the tickets and before the branch exists — so this is the last moment a rename costs one `mv`. Later it costs a branch rename too, because `/to-durable` derives its working directory from the branch name. Where the slug still names a mechanism the spec has moved past, propose the outcome-shaped name and rename on approval.
+
 <spec-template>
 
 ## Problem Statement

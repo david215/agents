@@ -49,6 +49,19 @@ commit to. Three things it does that reading code cannot:
 The corollary is the point: a survey is what makes *"does this need to exist at all?"* answerable
 with a number instead of an intuition.
 
+## Name the feature after its outcome
+
+The findings log needs `.scratch/<feature-slug>/`, so the slug gets chosen at the moment of maximum
+ignorance — before the map, before the survey, before a single question is answered. Slug the
+**outcome**, and let the mechanism stay unnamed: mechanisms are exactly what a grilling overturns.
+`email-language` survived the discovery that org timezone governs one of three emails and an
+explicit locale governs the other two; `email-language-by-org-timezone` was stale within the hour.
+A term already in the glossary is the safest choice available — it survived this scrutiny once.
+
+The name is load-bearing beyond the directory: the branch carries the same slug, and `/to-durable`
+strips the branch prefix to find its own working directory. Rename late and you are renaming two
+things in sync. `/to-spec` owns the checkpoint that catches it while it is still free.
+
 ## Capture as you go
 
 A grilling surfaces more than terms and decisions. When something surprises you that is neither —
