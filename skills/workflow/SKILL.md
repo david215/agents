@@ -43,8 +43,8 @@ tickets and still not know which phase is running, what comes next, or that anyt
 going on alongside the feature. Measured on the first real run: the design was fully recoverable
 from the artifacts inside a minute, and the process state was not recoverable at all.
 
-So this skill keeps one more file, `.scratch/<feature-slug>/STATE.md`, **overwritten** at every
-boundary, immediately before the reset:
+So this skill keeps one more file, `.scratch/<feature-slug>/STATE.md`, **overwritten as the closing
+act of each phase** — after `/commit` finishes a ticket, after `/to-durable` writes its docs:
 
 ```
 # State — email-language
@@ -61,8 +61,16 @@ It is a bookmark, not a log. No history, no reasoning, nothing a fresh session w
 that goes stale. `Also:` is the line that earns its keep most often, because side quests and
 experiments live nowhere else.
 
-Read it first when a session starts mid-feature. Write it last before ending one. It is deleted with
-the rest of `.scratch/`.
+Write it when the **work** completes, not when the **context** resets. `/clear` is typed by the user
+and leaves the agent no turn to act first, so any rule shaped like "update this immediately before
+the reset" cannot be obeyed by the party who has to obey it — it silently becomes something the user
+must remember to ask for, which is the manual step the file exists to remove. Closing each phase with
+the write means the bookmark is already current whenever the reset arrives, announced or not.
+
+It also settles which boundaries need a write, for free: the ones that do not are exactly the ones
+where nothing finished.
+
+Read it first when a session starts mid-feature. It is deleted with the rest of `.scratch/`.
 
 ## Before the first run
 
