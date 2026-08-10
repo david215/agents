@@ -134,8 +134,9 @@ those files, holding a copy is the only mechanism available.
 | Skill | Change | Why |
 | --- | --- | --- |
 | `grill-me` | dropped `disable-model-invocation` | so `/workflow` can invoke it |
-| `grill-with-docs` | ″, plus a **Capture as you go** section | ″, plus findings-log capture |
-| `to-spec` | ″ | ″ |
+| `grilling` | fact-finding no longer mandates a sub-agent; each question goes on **both** prose and `AskUserQuestion` | a session can forbid sub-agents and no lookup needs one; the prose template predates the tool, so every run rediscovered the overlap |
+| `grill-with-docs` | ″, plus **Capture as you go**, **Map the territory before round one**, **Map the data too**, **Name the feature after its outcome** | ″, plus findings-log capture, and the three things a grilling cannot get from the user: code shape, production data, a name that survives discovery |
+| `to-spec` | ″, plus a **feature-slug checkpoint** after the spec is written | ″, plus the spec is the last artifact landing before the branch exists, so it is the last moment a rename costs one `mv` |
 | `to-tickets` | ″, plus **state scope by extent, not by count** | ″, plus counts in acceptance criteria were wrong twice in one six-ticket feature |
 | `implement` | set `disable-model-invocation: false`; **Capture as you go**; `/test-report` stated as a gate; commit via `/commit` | ″, plus wiring to the owned skills |
 | `domain-modeling` | `ADR-FORMAT.md` gains **Length: anti-inference only** | ADRs written mid-feature were otherwise ungoverned |
@@ -145,7 +146,7 @@ those files, holding a copy is the only mechanism available.
 The five `agents/openai.yaml` files carry a matching `allow_implicit_invocation: true`, which
 upstream leaves `false` — without it the frontmatter change is contradicted for non-Claude agents.
 
-**Eight of these are body edits, not frontmatter.** Reviewing upstream is a merge exercise now, not
+**Most of these are body edits, not frontmatter.** Reviewing upstream is a merge exercise now, not
 a glance at a few one-line diffs. That is the deliberate price of putting writing rules in skills
 rather than in seeds: a rule shipped inside a seed can never be improved for a repo already set up,
 because generated repo docs are repo-owned and never re-sync.
