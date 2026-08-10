@@ -10,6 +10,8 @@ Two-axis review of the diff between `HEAD` and a fixed point the user supplies:
 
 Both axes run as **parallel sub-agents** so they don't pollute each other's context, then this skill aggregates their findings.
 
+That is a **precondition, not an implementation detail.** If this session cannot spawn sub-agents — a harness without them, or an operating rule requiring the user to request them first — stop and say so now, before any of the setup below. Do not quietly run both axes in one context: the report comes out looking the same and is weaker, because the isolation is the whole reason the axes are split. Put the choice to the user — grant the sub-agents, or accept a single-context review and have it labelled as one.
+
 The issue tracker should have been provided to you — run `/setup-matt-pocock-skills` if `docs/agents/issue-tracker.md` is missing.
 
 ## Process

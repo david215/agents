@@ -65,6 +65,30 @@ tracker decides only whether the spec and tickets live there too. A working dire
 only on a markdown tracker would make the `/test-report` → `/pr` handoff silently do nothing
 everywhere else.
 
+## Instructions need an addressee with a turn
+
+Every instruction in a skill is executed by somebody. Name them, then check they have a turn at the
+moment the instruction names.
+
+`/workflow` shipped a rule to overwrite `STATE.md` "immediately before the reset". No such moment
+exists for the agent: `/clear` is typed by the user and yields no turn beforehand, so the rule was
+addressed to the only party that could not carry it out, and quietly became something the user had
+to remember instead. Retimed to the closing act of each phase — an act the agent does perform — it
+works.
+
+What earns this a rule is that the failure is **silent**. Nothing errors; the file just goes stale
+while looking maintained. Phrasings that fail the test: *before the reset*, *on exit*, *when the
+session ends*, *when the user leaves*.
+
+The related case is an instruction whose addressee is right but whose **capability** is not
+guaranteed — `/code-review` requires sub-agents, and a session can forbid them. That one states the
+requirement as a precondition and asks, rather than degrading into a weaker review that looks
+identical.
+
+Neither is a `check.sh` entry. Both tests are semantic, and the only greppable part — those phrases —
+appears legitimately in the passages explaining the rule, so a check would need an exclusion list
+longer than the signal it finds.
+
 ## What's here
 
 **Vendored from `mattpocock/skills`** (MIT — see [`LICENSE-mattpocock`](./LICENSE-mattpocock)):
@@ -116,11 +140,12 @@ those files, holding a copy is the only mechanism available.
 | `implement` | set `disable-model-invocation: false`; **Capture as you go**; `/test-report` stated as a gate; commit via `/commit` | ″, plus wiring to the owned skills |
 | `domain-modeling` | `ADR-FORMAT.md` gains **Length: anti-inference only** | ADRs written mid-feature were otherwise ungoverned |
 | `setup-matt-pocock-skills` | `issue-tracker-local.md` gains ephemerality and lifecycle; `domain.md` gains an ADR-length pointer | `.scratch/` is worthless as an ephemeral layer if nothing ever extracts from it or deletes it |
+| `code-review` | sub-agents stated as a **precondition** that stops and asks | a session can forbid them, and running both axes in one context loses the isolation while looking identical |
 
 The five `agents/openai.yaml` files carry a matching `allow_implicit_invocation: true`, which
 upstream leaves `false` — without it the frontmatter change is contradicted for non-Claude agents.
 
-**Seven of these are body edits, not frontmatter.** Reviewing upstream is a merge exercise now, not
+**Eight of these are body edits, not frontmatter.** Reviewing upstream is a merge exercise now, not
 a glance at a few one-line diffs. That is the deliberate price of putting writing rules in skills
 rather than in seeds: a rule shipped inside a seed can never be improved for a repo already set up,
 because generated repo docs are repo-owned and never re-sync.
