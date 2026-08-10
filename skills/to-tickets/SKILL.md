@@ -103,6 +103,12 @@ The end-to-end behaviour this ticket makes work, from the user's perspective —
 
 In either form, avoid specific file paths or code snippets — they go stale fast. Exception: if a prototype produced a snippet that encodes a decision more precisely than prose can (state machine, reducer, schema, type shape), inline it and note briefly that it came from a prototype. Trim to the decision-rich parts — not a working demo, just the important bits.
 
+**State scope by extent, not by count.** "Removes all of its call sites" survives contact with the
+code; "removes all four of its call sites" is a measurement taken from reasoning, and a wrong one
+makes a correct implementation read as incomplete. Measured: counts in acceptance criteria were wrong
+twice in one six-ticket feature, in both directions. Where a number genuinely carries the
+requirement, grep for it before writing it down.
+
 ## Capture as you go
 
 Slicing work into tickets exposes things no ticket should carry — a prefactor that turned out to be

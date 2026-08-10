@@ -136,7 +136,7 @@ those files, holding a copy is the only mechanism available.
 | `grill-me` | dropped `disable-model-invocation` | so `/workflow` can invoke it |
 | `grill-with-docs` | ″, plus a **Capture as you go** section | ″, plus findings-log capture |
 | `to-spec` | ″ | ″ |
-| `to-tickets` | ″ | ″ |
+| `to-tickets` | ″, plus **state scope by extent, not by count** | ″, plus counts in acceptance criteria were wrong twice in one six-ticket feature |
 | `implement` | set `disable-model-invocation: false`; **Capture as you go**; `/test-report` stated as a gate; commit via `/commit` | ″, plus wiring to the owned skills |
 | `domain-modeling` | `ADR-FORMAT.md` gains **Length: anti-inference only** | ADRs written mid-feature were otherwise ungoverned |
 | `setup-matt-pocock-skills` | `issue-tracker-local.md` gains ephemerality and lifecycle; `domain.md` gains an ADR-length pointer | `.scratch/` is worthless as an ephemeral layer if nothing ever extracts from it or deletes it |
