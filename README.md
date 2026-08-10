@@ -5,7 +5,7 @@ boundary. Built on top of [Matt Pocock's skills](https://github.com/mattpocock/s
 customized.
 
 ```bash
-npx skills add david215/skills
+npx skills add david215/skills -g --all
 ```
 
 ## Getting started on a new repo
@@ -136,6 +136,24 @@ for p in productivity/{grilling,grill-me} \
          engineering/{grill-with-docs,to-spec,to-tickets,implement,tdd,codebase-design,code-review,domain-modeling,setup-matt-pocock-skills}; do
   diff -ur /tmp/mp/skills/$p skills/$(basename $p)
 done
+```
+
+## Editing these skills
+
+Edit here, push, then reinstall. **Never `cp` into `~/.agents/skills/`.**
+
+```bash
+./check.sh && git commit … && git push     # reinstall pulls from the remote, so push first
+npx skills add david215/skills -g --all    # = --skill '*' --agent '*' -y
+```
+
+A copy produces a *working* install with no entry in `~/.agents/.skill-lock.json`. The CLI reports
+that as `Source: local`, and `skills update` only walks lock entries — so a copied skill is skipped
+forever while looking completely fine on disk. Four of these sat that way until `skills list -g` was
+read closely. `check.sh` cannot catch it either: it lints the repo, not the installation.
+
+```bash
+npx skills list -g | grep -B1 local   # should print nothing
 ```
 
 ## Checks
