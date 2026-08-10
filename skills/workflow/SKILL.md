@@ -35,6 +35,12 @@ would produce a second copy of decisions already written.
 `/implement` runs `/tdd`, `/code-review`, `/test-report`, and `/commit` itself. Do not call those
 from here.
 
+A feature's **facts** may live in more than one repository — a frontend whose behaviour the change
+depends on, a service that calls the endpoint being altered. Read them wherever they are; phase 1 is
+no less thorough for a fact sitting one directory over. Its **artifacts** stay single-homed:
+`.scratch/`, `docs/`, and the branch all belong to the repo being changed, and every boundary below
+assumes exactly one of each.
+
 ## Where you are
 
 The table above is only half of what survives a reset. Every phase leaves an artifact of its
