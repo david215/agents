@@ -181,14 +181,21 @@ cap forces this anyway; on GitHub nothing forces it and it is still correct.
 **Resolve the report before writing this section** — whether it exists decides what you may check.
 
 ```bash
-ls .scratch/<feature-slug>/test-report.md      # slug = branch name minus any <type>/ prefix
-git log -1 --format=%cI                        # newest commit, for the staleness check
+ls .scratch/<feature-slug>/test-report.md       # slug = branch name minus any <type>/ prefix
+git log -1 --format=%cI -- ':!docs/' ':!*.md'   # newest CODE commit, for the staleness check
 ```
 
 `/test-report` writes that file; this skill does not run tests and does not compose the table. A
-report older than the newest commit describes code no longer on the branch — say so and ask rather
-than posting it, because a stale table carries more authority than no table, which is the thing this
-whole arrangement exists to avoid.
+report older than the newest **code** commit describes code no longer on the branch — say so and ask
+rather than posting it, because a stale table carries more authority than no table, which is the
+thing this whole arrangement exists to avoid.
+
+**The exclusions are load-bearing.** `/to-durable` runs immediately before this skill and commits
+documentation. Docs change no code, so a report predating only those commits is still current.
+Comparing against the newest commit of any kind flags every correctly-executed run of `/workflow` —
+which trains the reader to wave the check through, and it is the one check standing between a stale
+table and a reviewer who believes it. Widen the exclusions to fit the repo; keep the intent, which is
+*commits that could invalidate a test run*.
 
 A template's test items are part of the contract — they cannot be deleted, and leaving them blank
 reads as unconsidered. Fill each with a pointer, in the repo's prose language:
