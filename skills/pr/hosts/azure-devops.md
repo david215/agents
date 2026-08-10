@@ -81,6 +81,35 @@ az devops invoke --area git --resource pullRequestThreads --http-method POST \
   --api-version 7.1 --in-file <scratch>/comment.json   # body built from .scratch/<feature-slug>/test-report.md
 ```
 
+`comment.json` is
+`{"comments": [{"parentCommentId": 0, "content": "<report>", "commentType": 1}], "status": <n>}`.
+
+### Post the report thread resolved, not active
+
+A test report asks nothing of a reviewer. Left active it joins the unresolved-comment count Azure
+DevOps shows on the PR — the list reviewers work through before approving — so it reads as an
+outstanding item, and someone has to resolve a comment they did not write to clear it. Resolved, it
+still renders in full and still notifies on creation.
+
+Two calls, because only the second value is verified on this resource:
+
+```bash
+# 1. POST as above, and read pullRequestThreads' returned id.
+# 2. Then close the thread:
+echo '{"status":"closed"}' > <scratch>/thread-status.json
+az devops invoke --area git --resource pullRequestThreads --http-method PATCH \
+  --route-parameters project=<project> repositoryId=<repo> pullRequestId=<id> threadId=<threadId> \
+  --api-version 7.1 --in-file <scratch>/thread-status.json
+```
+
+`closed` is the right status, not `fixed` — nothing was repaired.
+
+Measured 2026-08-10 against `dev.azure.com`: the PATCH accepts the string `"closed"` and echoes it
+back. Whether a thread can be *born* closed by putting `"status": "closed"` in the POST body is
+**untested** — the field is honoured on create (`1` yields an active thread), so it likely collapses
+to one call. Verify before simplifying: a create that silently ignores the field leaves the thread
+active, which is what this section exists to prevent.
+
 To update an existing report comment instead of adding a thread, GET the threads first and PATCH the
 matching comment.
 

@@ -132,9 +132,12 @@ a caller relying on the old behaviour — even with all three dimensions literal
 very often the most important change in the PR, and a narrow "did the schema change" reading is
 exactly what drops it.
 
-When any route qualifies, this group is **first**, labelled `API changes` — or its equivalent in the
-repo's prose language, matching the surrounding text. Each child is a route written as
-`` `METHOD /path` `` followed by exactly one tag:
+When any route qualifies, this group comes **first** and is labelled in the repo's prose language,
+matching the surrounding text — `API 변경 사항` in a Korean body, not `API changes`. The English form
+in this file and in `default-template.md` is the name of the concept, not a string to copy: a body
+whose every other label is Korean and whose most important label is English reads as a template that
+was filled in without being read. Each child is a route written as `` `METHOD /path` `` followed by
+exactly one tag:
 
 | Tag | Meaning |
 | --- | --- |
@@ -157,6 +160,27 @@ sub-bullets rather than inline text after a colon. Implementation detail already
 the body does not belong here.
 
 If no route has caller-visible change, omit the group. Do not manufacture one.
+
+#### Which section it goes in, when the repo's template has several
+
+It goes in the section that asks **what changed** — first position inside it. Not the section that
+asks what effects are expected, even though a contract change is arguably the most effect-laden thing
+in the branch.
+
+Two reasons, and they decide it rather than merely leaning:
+
+- An effects section asks what a reader should **anticipate** — Korean templates make this explicit
+  with `예상`. A route list with tags is a factual inventory of what shipped, so it answers the wrong
+  question there, and it displaces the consequences that genuinely belong in that section.
+- The routes need the change-groups that explain them nearby. Split across two sections, a reviewer
+  reads a contract delta with its rationale one section away.
+
+The effects section then has a real job rather than a redundant one: the *consequences* of those
+route changes. `PATCH /organizations` accepting a new field is a change; every pre-existing
+organization silently switching email language because of it is an effect.
+
+**Only when a template has no what-changed section at all** does the group move under effects. Say so
+in one line when that happens, since it departs from the shape above.
 
 ### Prose
 
@@ -275,6 +299,11 @@ what makes a comment the right home, and also what makes re-posting on every pus
 Write every path in full, one per line. Compressed file lists (`spec/{a,b}.unit.spec.ts`) only ever
 existed to buy characters against the description cap; a comment has ~37× as many on Azure DevOps and
 no practical limit on GitHub, and a full path is greppable and clickable.
+
+**Where the host has a resolved state for comments, post the report in it.** The report asks nothing
+of a reviewer, so an open thread misfiles it as an outstanding item in the unresolved count people
+clear before approving — and clearing it falls to someone who did not write it. This is host-specific:
+Azure DevOps threads carry a status, plain GitHub PR comments do not.
 
 Commands are in the host module.
 

@@ -9,6 +9,9 @@ invented here would be a guess at that, so this covers the minimum a reviewer ne
 ```markdown
 ## What changed
 
+- **API changes**
+  - `<METHOD /path>` (BREAKING|new|changed)
+    - <what a caller must now do differently>
 - **<label>**
   - <detail>
   - <detail>
@@ -19,11 +22,6 @@ invented here would be a guess at that, so this covers the minimum a reviewer ne
 
 - <outcome supported by the diff>
 
-## API changes
-
-- `<METHOD /path>` (BREAKING|new|changed)
-  - <what a caller must now do differently>
-
 ## Tests
 
 See the test report comment below.
@@ -31,7 +29,15 @@ See the test report comment below.
 
 ## Notes
 
-**Omit `API changes` entirely** when no route has caller-visible change. An empty section reads as
+**`API changes` is a change-group label inside `What changed`, first position** — not a section of its
+own, and never under `Expected effect`. See Step 4's *Which section it goes in*. Earlier versions of
+this file gave it its own section after `Expected effect`, which contradicted `SKILL.md`'s
+first-position rule; the label form is the one that holds.
+
+**Translate every label into the repo's prose language**, `API changes` included. The English here
+names the concept; it is not a string to copy into a body written in another language.
+
+**Omit `API changes` entirely** when no route has caller-visible change. An empty label reads as
 "checked and clear" when it usually means "not checked".
 
 **`Tests` is a pointer, never content.** Both the changed spec files and the run results live in the

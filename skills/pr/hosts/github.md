@@ -59,6 +59,12 @@ gh pr comment <number> --edit-last --body-file .scratch/<feature-slug>/test-repo
 `--edit-last` only edits a comment authored by the current account; if the last comment is someone
 else's, it fails rather than overwriting — which is the behaviour you want.
 
+**There is no resolved state to post the report into.** Only *review* threads — comments anchored to a
+line of the diff — can be resolved on GitHub; a plain PR comment carries no status and appears in no
+unresolved count. Step 7's "post it resolved where the host supports it" is therefore a no-op here,
+and anchoring the report to an arbitrary diff line to earn a resolve button would be worse than
+leaving it plain.
+
 ## Issue linking
 
 `vcs.md`'s **Issue linking** section decides this. Where the repo links, put `Closes #<n>` in the
