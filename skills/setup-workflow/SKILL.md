@@ -122,11 +122,18 @@ exhaust memory and take the machine down."]
 ### Findings log
 
 Defects and gotchas found mid-feature land in `.scratch/<feature-slug>/findings.md` as they surface.
+
+### Feature state
+
+A `.scratch/<feature-slug>/STATE.md` means that feature is mid-flight. Read it before touching that
+feature's code — it names the workflow in progress and the command that resumes it.
 ```
 
-That last block is a **pointer with no target on purpose.** It exists so an agent doing ad-hoc work in this repo — no skill loaded — still learns the habit. How to write a finding, and what goes to the glossary or an ADR instead, lives in the skills that capture them, where it can still be improved for repos already set up. A repo doc restating it would be a photocopy that never re-syncs.
+Those last two blocks are **pointers with no target on purpose.** They exist so an agent doing ad-hoc work in this repo — no skill loaded — still learns the habit. How to write a finding, and what goes to the glossary or an ADR instead, lives in the skills that capture them, where it can still be improved for repos already set up. A repo doc restating it would be a photocopy that never re-syncs.
 
-Update these three sub-blocks in place if they already exist. Leave every other section of the file alone, including the sub-blocks `/setup-matt-pocock-skills` owns.
+**Feature state** carries a second job the others do not: it is the only line that can bootstrap a multi-phase workflow after a context reset. `/workflow` tells its own reader to open `STATE.md`, but a session resuming cold has not loaded `/workflow` and never sees that instruction — the pointer is what breaks the circle. Without it, resuming depends on the user remembering to say so.
+
+Update these four sub-blocks in place if they already exist. Leave every other section of the file alone, including the sub-blocks `/setup-matt-pocock-skills` owns.
 
 ### 5. Done
 

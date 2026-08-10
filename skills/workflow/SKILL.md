@@ -55,12 +55,23 @@ act of each phase** — after `/commit` finishes a ticket, after `/to-durable` w
 ```
 # State — email-language
 
-Phase:    4 — build it (`/implement`)
+Workflow: /workflow — read that skill before acting
+Phase:    4 of 6 — build it (`/implement`)
 Next:     /implement 03-invitations-follow-organization-timezone
 Tickets:  01 done · 02 done · 03–06 not started
 Branch:   feat/email-language
 Also:     running as a live test of `/workflow`; notes in `workflow-notes.md`
 ```
+
+**The first line names the process.** `Phase: 4` on its own is an ordinal with no referent — four of
+what, governed by which skill, with what after it? A session opening this file cold needs that
+before any other line means anything, and on most features nothing else in the file supplies it.
+Naming the skill also puts the phase table and these boundaries back within reach in one command.
+
+That makes the file self-explanatory once opened, not self-discovering; nothing inside a file makes
+an agent open it. `/setup-workflow` writes the other half — a **Feature state** pointer in the
+repo's agent doc, which a session loads whether or not it knows a workflow is running. A repo set up
+before that pointer existed needs the line added by hand, because generated repo docs never re-sync.
 
 **`Next:` carries the command to run, not a description of it.** A resuming session reads
 `ticket 03` as work to pick up and starts editing files; it reads `/implement 03-…` as the thing to
