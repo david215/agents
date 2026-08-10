@@ -43,6 +43,12 @@ git diff --name-only <merge_base>..HEAD
 
 If the user asks to include uncommitted work, add `git diff --name-only HEAD` and say so.
 
+**Scope is the branch, not the ticket.** A feature built over many tickets hands this skill a growing
+suite set on every run, and each run overwrites the last (see *Where the report goes*) — so the run
+after the final ticket is the one that covers the whole feature. Mid-feature runs earn their cost by
+catching breakage early, and may narrow to the suites that ticket touched. Take the full branch-wide
+scope once the last ticket is in.
+
 ### 2. Classify changed files
 
 - **Touched specs** — paths matching the repo's spec pattern from `testing.md`. These go straight
