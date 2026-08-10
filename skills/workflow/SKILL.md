@@ -35,6 +35,35 @@ would produce a second copy of decisions already written.
 `/implement` runs `/tdd`, `/code-review`, `/test-report`, and `/commit` itself. Do not call those
 from here.
 
+## Where you are
+
+The table above is only half of what survives a reset. Every phase leaves an artifact of its
+**content**, and none leaves one of its **position** — a fresh session can read `spec.md` and six
+tickets and still not know which phase is running, what comes next, or that anything unusual is
+going on alongside the feature. Measured on the first real run: the design was fully recoverable
+from the artifacts inside a minute, and the process state was not recoverable at all.
+
+So this skill keeps one more file, `.scratch/<feature-slug>/STATE.md`, **overwritten** at every
+boundary, immediately before the reset:
+
+```
+# State — email-language
+
+Phase:    4 — build it (`/implement`)
+Next:     5 — harvest it (`/to-durable`)
+Tickets:  01 done · 02 in progress · 03–06 not started
+Branch:   feat/email-language
+Also:     running as a live test of `/workflow`; notes in `workflow-notes.md`
+```
+
+It is a bookmark, not a log. No history, no reasoning, nothing a fresh session would rather read in
+`spec.md` — those belong to the artifacts that already hold them, and a second copy here is a copy
+that goes stale. `Also:` is the line that earns its keep most often, because side quests and
+experiments live nowhere else.
+
+Read it first when a session starts mid-feature. Write it last before ending one. It is deleted with
+the rest of `.scratch/`.
+
 ## Before the first run
 
 This repo must have been configured, or the phases have nothing to read:
@@ -78,6 +107,10 @@ lowest number first. For a linear chain that is simply top to bottom.
 Run `/implement` once per ticket, not once for the batch. A single run spanning four tickets is the
 context problem this skill exists to avoid, wearing a different hat.
 
+Name the ticket by its **filename**, not a position — `/implement 03-invitations-follow-organization-timezone`,
+never `/implement ticket3`. Ordinal references resolve by guesswork, which is safe with six tickets
+and is not with sixteen.
+
 ## Capturing as you go
 
 Every phase appends to `.scratch/<feature-slug>/findings.md` as things surface — each skill carries
@@ -120,5 +153,8 @@ on GitHub, GitLab, or Jira the directory simply holds the working files without 
 - **Do not skip phase 5 to save time.** It is the only step that moves anything into the repository
   permanently, and it runs before the PR precisely so the rationale lands in the same diff as the
   code it explains.
-- **Do not run phases 1–3 for a one-ticket change.** A bug fix with an obvious cause does not need a
-  spec. Use the skills directly; this sequence earns its overhead on work that outlasts a window.
+- **Do not run phases 2–3 for a change that fits one window.** A bug fix with an obvious cause does
+  not need a spec and a ticket graph. Phase 1 still runs: mapping the code is what `/implement` wants
+  anyway, and the interview self-limits — a map that surfaces no fork leaves nothing to ask, so the
+  phase costs a few minutes and ends. What you skip is the paperwork whose only job is to survive a
+  context reset you are not going to need.

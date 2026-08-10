@@ -20,6 +20,8 @@ Work top to bottom at the boundary. The first **yes** wins.
 
 **1. Can you continue in this session?** Two things make the answer yes: the next phase needs this phase as a **primary source**, or you have enough [smart zone](https://www.aihero.dev/ai-coding-dictionary/smart-zone) left (~150k tokens) for the next phase to fit. Grilling → implementation is the standard yes: the implementation wants the reasoning verbatim, not a summary of it. Continue costs nothing and loses nothing, so rule it out before anything else.
 
+That standard yes holds only while the reasoning lives *nowhere but here*. Once a spec and tickets have been written from it, the primary source is the file, the session is a copy of a copy, and question 2 takes over — which is why `/workflow` reverses this default after its phase 3.
+
 **2. Is the context irrelevant to what comes next?** Is everything in this session — the exploration, the decisions, the dead ends — disposable? If so, **`/clear`**. It is the cheapest move on the board: it takes no time and hands back the whole window. `/clear` also isn't terminal — the old session stays resumable.
 
 The cost of getting this wrong is one-way. Clear a *relevant* context and you lose the **why** behind what you built, and no amount of reading the diff back gets it returned.
