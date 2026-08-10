@@ -50,11 +50,17 @@ act of each phase** — after `/commit` finishes a ticket, after `/to-durable` w
 # State — email-language
 
 Phase:    4 — build it (`/implement`)
-Next:     5 — harvest it (`/to-durable`)
-Tickets:  01 done · 02 in progress · 03–06 not started
+Next:     /implement 03-invitations-follow-organization-timezone
+Tickets:  01 done · 02 done · 03–06 not started
 Branch:   feat/email-language
 Also:     running as a live test of `/workflow`; notes in `workflow-notes.md`
 ```
+
+**`Next:` carries the command to run, not a description of it.** A resuming session reads
+`ticket 03` as work to pick up and starts editing files; it reads `/implement 03-…` as the thing to
+type. Measured: a session that resumed on the descriptive form skipped the phase's skill for three
+consecutive tickets, and with it the `/tdd`, `/test-report`, and `/code-review` that skill owns.
+Naming a skill on the `Phase:` line above does not substitute — it identifies, it does not instruct.
 
 It is a bookmark, not a log. No history, no reasoning, nothing a fresh session would rather read in
 `spec.md` — those belong to the artifacts that already hold them, and a second copy here is a copy
@@ -103,6 +109,11 @@ the transcript.
 N+1 needs the *code* ticket N produced, not the reasoning about how it got there. Do not send a
 ticket to a subagent instead: `/implement` keeps you in the loop by design, and question 4 of the
 tree gates subagents on work that runs with you away from the keyboard.
+
+The reset is also what fires the ticket's **close-out** — `/test-report`, `/code-review`, `/commit`,
+the STATE.md write. Tickets run back to back in one window blur the boundary, and the close-out is
+what goes missing: measured on a run where three tickets shipped with none of the four. Room left in
+the window is not the question. The stop is doing a second job.
 
 The rest of the boundaries are genuine judgement calls. Ask the questions in order and take the
 first yes.
