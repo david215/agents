@@ -22,6 +22,33 @@ and less accurate than reading it.
 The map is never wasted work: `/implement` needs it regardless, and it is what tells you whether
 this feature needs a spec at all.
 
+### Map the data too, when behaviour keys off it
+
+The codebase tells you what *can* happen. It does not tell you how often, to how many rows, or
+whether the case the design is being built around exists at all. Whenever the feature's behaviour
+depends on stored values — a column it branches on, a table it migrates, a population it treats
+differently — go and read production before the spec is written.
+
+Read-only, always. Aggregates before identities: counts, distributions and date ranges first, and
+pull actual rows only once the count is small enough that a human will review them. A grilling never
+writes to production.
+
+Do this **before** `/to-spec`, because the whole value is deleting scope the spec would otherwise
+commit to. Three things it does that reading code cannot:
+
+- **Sizes the work.** "Correct the organizations with a wrong timezone" was heading for a
+  classification script. The count came back **two**, and the script became two `UPDATE` statements
+  and one fewer ticket.
+- **Contradicts recollection.** Treat what the user remembers about their own data as a hypothesis.
+  Six organizations everyone recalled as foreign turned out to be abandoned single-day trials with
+  zero students; correcting them would have changed nothing any human would ever see.
+- **Reorders the feature.** The half of that feature everyone was focused on governed a path used
+  **37 times in the product's lifetime**, while the half nobody was discussing ran on every signup.
+  Nothing in the code says which is which.
+
+The corollary is the point: a survey is what makes *"does this need to exist at all?"* answerable
+with a number instead of an intuition.
+
 ## Capture as you go
 
 A grilling surfaces more than terms and decisions. When something surprises you that is neither —
