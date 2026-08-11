@@ -127,6 +127,14 @@ N+1 needs the *code* ticket N produced, not the reasoning about how it got there
 ticket to a subagent instead: `/implement` keeps you in the loop by design, and question 4 of the
 tree gates subagents on work that runs with you away from the keyboard.
 
+Nor in parallel across worktrees, however clean the ticket graph looks. A blocking edge records
+whether B needs A's **output** — parallel branches need the stricter property that A and B never
+touch the same bytes, and `/to-tickets` does not compute it: measured on a feature whose tickets 01
+and 02 each declared the other independent, correctly, then edited three files in common, two of
+them specs both were deleting fixture lines from. Parallel runs also multiply the test runner's
+resource footprint and share one dev database — a constraint `docs/agents/testing.md` records if
+anything does.
+
 The reset is also what fires the ticket's **close-out** — `/test-report`, `/code-review`, `/commit`,
 the STATE.md write. Tickets run back to back in one window blur the boundary, and the close-out is
 what goes missing: measured on a run where three tickets shipped with none of the four. Room left in
