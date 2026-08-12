@@ -135,12 +135,14 @@ those files, holding a copy is the only mechanism available.
 | --- | --- | --- |
 | `grill-me` | dropped `disable-model-invocation` | so `/workflow` can invoke it |
 | `grilling` | fact-finding no longer mandates a sub-agent; each question goes on **both** prose and `AskUserQuestion` | a session can forbid sub-agents and no lookup needs one; the prose template predates the tool, so every run rediscovered the overlap |
-| `grill-with-docs` | ″, plus **Capture as you go**, **Map the territory before round one**, **Map the data too**, **Name the feature after its outcome** | ″, plus findings-log capture, and the three things a grilling cannot get from the user: code shape, production data, a name that survives discovery |
+| `grill-with-docs` | ″, plus **Capture as you go**, **Map the territory before round one**, **Map the data too** (timed before round one, with a hand-over path when the database is unreachable), **Name the feature after its outcome** | ″, plus findings-log capture, and the three things a grilling cannot get from the user: code shape, production data, a name that survives discovery. The map prices existence; only the survey prices importance, so asking first allocates round-one attention by guesswork |
 | `to-spec` | ″, plus a **feature-slug checkpoint** after the spec is written | ″, plus the spec is the last artifact landing before the branch exists, so it is the last moment a rename costs one `mv` |
 | `to-tickets` | ″, plus **state scope by extent, not by count** | ″, plus counts in acceptance criteria were wrong twice in one six-ticket feature |
 | `implement` | set `disable-model-invocation: false`; **Capture as you go**; `/test-report` stated as a gate; commit via `/commit` | ″, plus wiring to the owned skills |
-| `domain-modeling` | `ADR-FORMAT.md` gains **Length: anti-inference only** | ADRs written mid-feature were otherwise ungoverned |
+| `domain-modeling` | `ADR-FORMAT.md` gains **Length: anti-inference only**, plus reachability, no self-history, and no ephemeral references | ADRs written mid-feature were otherwise ungoverned — and once governed, still drifted: the three ADRs one workflow produced ran 99, 160 and 234 lines against ~50 for the hand-written ones |
 | `setup-matt-pocock-skills` | `issue-tracker-local.md` gains ephemerality and lifecycle; `domain.md` gains an ADR-length pointer | `.scratch/` is worthless as an ephemeral layer if nothing ever extracts from it or deletes it |
+| `to-durable` | anti-goal: **do not carry an ephemeral reference into a durable file** | it is the step most likely to — every finding arrives with a ticket and a slug attached, and the phrasing comes along for free |
+| `pr` | prose rule: **name nothing ephemeral** in the description | a description outlives the branch; a spec path does not, and one repo's `vcs.md` explicitly told it to link one |
 | `code-review` | sub-agents stated as a **precondition** that stops and asks | a session can forbid them, and running both axes in one context loses the isolation while looking identical |
 
 The five `agents/openai.yaml` files carry a matching `allow_implicit_invocation: true`, which

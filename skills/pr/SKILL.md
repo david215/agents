@@ -191,6 +191,12 @@ in one line when that happens, since it departs from the shape above.
   nothing on their own.
 - Claim no effect the diff does not show, and no test run the user did not report.
 - State an assumption in one line where the branch reads more than one way.
+- **Name nothing ephemeral.** A description outlives the branch; a ticket, a spec, a feature slug and
+  a `.scratch/` path do not — they are deleted after the merge. Describe what the branch does, not
+  which ticket asked for it or where the spec lives. If the repo's `vcs.md` says to link the spec
+  path because the tracker has no linkable ID, that instruction predates this rule and is wrong: a
+  path into a deleted directory links to nothing. The test-report comment is the one exception this
+  skill already makes, and it resolves before the merge rather than after.
 
 ### The test section is a pointer, never content
 

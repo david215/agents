@@ -165,3 +165,10 @@ ADR *length* is not a repo convention — anti-inference governs it everywhere, 
 - **Do not write a finding to two destinations.** Each line gets exactly one home. A defect that is
   also a hazard is a defect; a hazard that is also a test constraint belongs to `testing.md`. Pick
   the one an affected reader would look in, and only then consider whether a guardrail line is owed.
+- **Do not carry an ephemeral reference into a durable file.** This is the step most likely to do it:
+  every finding you are extracting arrived with a ticket, a spec and a slug attached, and the phrasing
+  comes along for free. A committed file may not name a ticket, a spec, a feature slug or a
+  `.scratch/` path — not in an ADR, not in known-issues, not in the glossary, not in a code comment.
+  All four are deleted after the merge; the reference is a dangling pointer on a known schedule.
+  State the fact, not where it was decided. The ephemeral-free phrasing is always available and never
+  loses anything: *a behaviour change no ticket asked for* → *a behaviour change nobody asked for*.

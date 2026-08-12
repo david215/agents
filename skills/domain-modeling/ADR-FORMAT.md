@@ -32,6 +32,49 @@ column bound, a measurement); and deliberate omissions worth not "fixing" later 
 **Cut:** motivation and history — nobody is going to re-introduce the bug; rejected options nobody
 would raise again; and anything a name, a type, or a test already says.
 
+### A rejected alternative survives only while it is still reachable
+
+"Someone will genuinely re-propose it" is the right test and too soft to apply under pressure, because
+every alternative felt worth arguing at the time it was rejected. Anchor it on the **current state**:
+
+> Could a reader, starting from the code as it now stands, actually choose this alternative?
+
+If not, it is not a rejected option — it is the history of how you arrived, and it goes. A feature
+that weighed renaming a column against mapping it, then shipped an add-and-drop instead, has no
+mapping decision left to record: after the drop there is no column to map, so nobody can propose it
+and the argument protects no one. Measured on one such ADR, this single question cut it from 160 lines
+to 76 with no anti-inference property lost.
+
+The same question is what stops the *motivation and history* line above from being read as "history of
+the problem" only. It also covers history of the **document**.
+
+### An ADR states the current decision, not its own revision history
+
+Git holds the revisions. "This ADR originally argued", "corrected on <date>", "superseded, and worth
+reading as a record of having weighed it" are changelog entries inside a document that already has a
+changelog, and they are the most common way a rewritten ADR ends up longer than the one it replaced.
+
+When a decision changes, **overwrite it and delete the reference to what was there before.** That is
+sufficient long-term documentation in the ordinary case. Keep the prior position only when a reader
+of the current code would otherwise re-propose it — which is the reachability question above, not a
+separate allowance.
+
+This is about a document narrating itself. Recording that ADR 0007 supersedes ADR 0003 is a relation
+between two documents and is fine; the `Status` frontmatter below exists for exactly that.
+
+### Reference nothing ephemeral
+
+An ADR is durable and the working artifacts around it are not. Tickets, specs, feature slugs and
+`.scratch/` paths are deleted per feature, so naming one guarantees a dangling pointer on a known
+schedule — "before the tickets were sliced", "what the ticket that requested this assumed", "queries
+in `.scratch/<slug>/survey.sql`".
+
+State the fact, not where it was decided. Every such phrase has an ephemeral-free form sitting right
+there: *no ticket asked for it* → *nobody asked for it*. A survey's numbers belong in the ADR; the
+path to the query file does not, because the ADR is what survives.
+
+The same rule governs every other durable file — a glossary, a known-issues list, a PR description.
+
 Two corollaries. A decision that reasoning actively **fights** — where the textbook answer is the
 wrong one here — is the highest-value thing an ADR can hold, so spend words there and nowhere else.
 And point at an ADR from code in **one line**; never restate its argument at the call site. Two
