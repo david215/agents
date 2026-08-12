@@ -33,8 +33,14 @@ Read-only, always. Aggregates before identities: counts, distributions and date 
 pull actual rows only once the count is small enough that a human will review them. A grilling never
 writes to production.
 
-Do this **before** `/to-spec`, because the whole value is deleting scope the spec would otherwise
-commit to. Three things it does that reading code cannot:
+Do this **before round one**, alongside the code map, and certainly before `/to-spec`. The map and the
+survey want the same timing for the same reason: **the map prices existence, the survey prices
+importance.** A question deserves the user's attention in proportion to the population it governs, and
+only the survey knows the population — so asking first allocates the scarcest thing in the process,
+round-one attention, by guesswork. One run spent a round-one slot on a fork governing 17 rows, while
+the question that reshaped the whole feature was answered later by a single `count(*)` returning zero.
+
+Three things a survey does that reading code cannot:
 
 - **Sizes the work.** "Correct the organizations with a wrong timezone" was heading for a
   classification script. The count came back **two**, and the script became two `UPDATE` statements
@@ -48,6 +54,14 @@ commit to. Three things it does that reading code cannot:
 
 The corollary is the point: a survey is what makes *"does this need to exist at all?"* answerable
 with a number instead of an intuition.
+
+**If you cannot reach the database, say so and hand over the queries.** Credentials fail, sandboxes
+refuse to read a connection string out of an `.env`, a production box is not reachable from here. The
+failure mode is silent: nothing downstream notices a survey that never ran, because no artifact is
+missing — there was never going to be one. So write the SQL to `.scratch/<feature-slug>/` anyway, show
+it, and ask the user to run it or to supply a connection string. The file makes the ask concrete and
+costs one message. Do not proceed to `/to-spec` on an unrun survey without saying plainly that the
+spec is being written on unmeasured assumptions.
 
 ## Name the feature after its outcome
 
