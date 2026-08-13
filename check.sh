@@ -5,8 +5,10 @@ set -u
 LOG=$(mktemp)
 say() { printf '%s\n' "$*" >> "$LOG"; }
 
-# 1. BSD grep has no -P and exits 2 on it — not the exit 1 that means "no match" — so a PCRE
-#    pattern silently stops checking anything on macOS while still looking like it ran.
+# 1. BSD grep — the default on a stock macOS — has no -P and exits 2 on it, not the exit 1 that
+#    means "no match", so a PCRE pattern silently stops checking anything while still looking
+#    like it ran. Not reproducible at this prompt: the grep on PATH here is ugrep, which does
+#    support -P. Trust this check over a local trial run.
 #    Match invocation shapes only, so prose naming the ban does not trip it.
 grep -rnE '(^|\| *)grep -[A-Za-z]*P ' skills/ 2>/dev/null \
   && say "grep -P is not portable. Match raw bytes instead."

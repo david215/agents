@@ -21,6 +21,20 @@ already shipped broken once.
 `check.sh` guard behaviour you cannot reproduce here — a pattern that works at this prompt can still
 fail on a plain macOS or CI box. Do not verify a portability fix by running it locally.
 
+**Skills are installed as copies; rules are symlinked to this repo.**
+
+    ~/.claude/skills  ->  ~/.agents/skills                 real copies — reinstall to update
+    ~/.claude/rules   ->  ~/.agents/rules  ->  rules/      two hops to this repo — no copies
+
+So a rules edit is live everywhere the moment you save it, and there is nothing to sync; a skill
+edit reaches nothing until you reinstall.
+
+**Never diff `rules/` against an install path to prove a sync.** Both hops land back on this repo,
+so the diff compares each file to itself, reports "in sync" by construction, and can never fail —
+`~/.agents/rules` looks like the real copy and is not. Establish what a path *is* (`ls -l`,
+`readlink`, or compare inodes with `stat -f %i`) before treating any diff across it as evidence.
+Skills are safe to diff because `~/.agents/skills` genuinely holds copies.
+
 ## Writing
 
 **The repo answers *where*; the skill carries the obligation.** A skill knows it must screen a
