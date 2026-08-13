@@ -22,6 +22,33 @@ No `vcs.md`? Infer the host from `git remote get-url origin` and the integration
 `git symbolic-ref refs/remotes/origin/HEAD`, say so in one line, and open the PR without reviewers
 rather than guessing at people.
 
+## Resolve the test report before composing anything
+
+The body's test section is a pointer to a comment carrying `.scratch/<feature-slug>/test-report.md`
+(Steps 4 and 7). Whether that file exists decides what the body may claim, so settle it here — not
+at Step 4, by which point the only moves left are to open the PR with an empty test section or to
+abandon a composed body.
+
+```bash
+ls .scratch/<feature-slug>/test-report.md    # slug = branch name minus any <type>/ prefix
+```
+
+- **Present** — carry on. Step 4 checks it for staleness, and its contents decide the checkboxes.
+  A report reading *0 suites, no run owed* is a real answer, not a missing one: take the template's
+  *not applicable* item if it has one.
+- **Absent** — `/test-report` has not run on this branch. Stop and ask before pushing. Offer to run
+  it first, or to open the PR with the test items honestly blank. Do not pick either silently.
+
+**This skill runs no tests and computes no test scope.** It reads one file and reports what that
+file says. `/test-report` writes the file on every run including one that selected no suites, which
+is what makes the two cases above distinguishable by `ls` alone — deriving them from the diff here
+would put suite-selection logic in a second skill, free to drift from the one that owns it.
+
+This is a **precondition, not an implementation detail.** Opening the PR and running `/test-report`
+afterwards does reach the same end state, at the cost of a second description update and a window
+where the PR asserts nothing about its own tests. A reviewer who reads it in that window has been
+told the wrong thing, and nothing later un-tells them.
+
 ## Step 1 — Compute the scope
 
 Every commit reachable from `HEAD` that is not on the integration branch.
@@ -199,24 +226,29 @@ The reason is staleness, not size: a test report is a point-in-time artifact tha
 push invalidates. On Azure DevOps the description cap forces this anyway; on GitHub nothing forces it
 and it is still correct.
 
-**Resolve the report before writing this section** — whether it exists decides what you may check.
+The precondition above already established whether a report exists. What is left here is whether it
+is still current:
 
 ```bash
-ls .scratch/<feature-slug>/test-report.md       # slug = branch name minus any <type>/ prefix
 git log -1 --format=%cI -- ':!docs/' ':!*.md'   # newest CODE commit, for the staleness check
 ```
 
-`/test-report` writes that file; this skill does not run tests and does not compose the table. A
-report older than the newest **code** commit describes code no longer on the branch — say so and ask
+A report older than the newest **code** commit describes code no longer on the branch — say so and ask
 rather than posting it, because a stale table carries more authority than no table, which is the
 thing this whole arrangement exists to avoid.
 
-**The exclusions are load-bearing.** `/to-durable` runs immediately before this skill and commits
-documentation. Docs change no code, so a report predating only those commits is still current.
-Comparing against the newest commit of any kind flags every correctly-executed run of `/workflow` —
-which trains the reader to wave the check through, and it is the one check standing between a stale
-table and a reviewer who believes it. Widen the exclusions to fit the repo; keep the intent, which is
-*commits that could invalidate a test run*.
+**The exclusions are load-bearing, and they are the one piece of test knowledge this skill holds.**
+Kept deliberately, against the rule above. `/to-durable` ends by committing documentation, so a
+docs-only commit sits immediately before every PR by construction. Docs change no code, so a report
+predating only those commits is still current — and comparing against the newest commit of any kind
+would flag every correctly-executed run of `/workflow`. A check that fires every time is one the
+reader learns to wave through, and this is the only check standing between a stale table and a
+reviewer who believes it.
+
+The alternatives were weighed and cost more: asking the user instead fires on every feature for the
+same reason, and delegating the judgement back to `/test-report` buys a clean separation with a whole
+skill invocation per PR. Widen the exclusions to fit the repo; keep the intent, which is *commits
+that could invalidate a test run*.
 
 A template's test items are part of the contract — they cannot be deleted, and leaving them blank
 reads as unconsidered. Fill each with a pointer, in the repo's prose language:
@@ -241,9 +273,10 @@ again drift on the next push, and the body is the copy nobody updates.
 
 **The report is what licenses a checkbox.** Check an item only for what the report actually shows:
 the diff proves spec files changed, so that box gets checked; whether a local run happened is known
-only if the report says so. **No report file?** Do not invent one and do not check any test box —
-say `/test-report` has not run for this branch and leave the items with their original placeholders.
-A pointer to a comment that will not exist is worse than an honest blank.
+only if the report says so. Never invent a report, and never check a box against one that does not
+exist — a pointer to a comment that will not exist is worse than an honest blank. The missing-report
+case is already settled by the precondition above, so this section only reaches one when the user
+chose to open the PR without it.
 
 ### User overrides
 

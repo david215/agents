@@ -26,7 +26,7 @@ nothing, and the boundaries below become cheap instead of frightening.
 | 3. Slice it | `/to-tickets` | `issues/NN-*.md` with blocking edges |
 | 4. Build it | `/implement` | code, commits, a ticket-scoped `test-report.md` |
 | 5. Prove it | `/test-report` + `/code-review` | a branch-wide `test-report.md`, review findings |
-| 6. Harvest it | `/to-durable` | ADRs, known-issues, glossary, agent doc |
+| 6. Harvest it | `/to-durable` | ADRs, known-issues, glossary, agent doc — committed |
 | 7. Publish it | `/pr` | a draft PR, with the report as a comment |
 
 Phase 1 writes ADRs and glossary entries as they crystallise — `/grill-with-docs` runs
@@ -35,6 +35,20 @@ would produce a second copy of decisions already written.
 
 `/implement` runs `/tdd`, `/code-review`, `/test-report`, and `/commit` itself. Do not call those
 from here — phase 5 is the exception, and it calls two of them at a scope `/implement` never uses.
+
+## Every phase runs, whatever the size
+
+**Phases 1–4, 6 and 7 run on every feature, a one-line bug fix included.** There is no size
+exemption and no judgement call about what a change deserves. A tiny change produces a five-line
+`spec.md` and a one-node ticket graph — a few minutes, against a phase order that then holds without
+anyone having to reason about it.
+
+Phase 4 is the one people drop, because on a small change it looks like "just write the code". It is
+not: `/implement` owns `/tdd`, `/code-review`, `/test-report`, and `/commit`. Skipping it skips every
+gate at once, and the loss is silent — the code still gets written, so nothing looks wrong until the
+PR has no test report and nothing has been reviewed.
+
+Phase 5 is the single exception, and it is not a size rule. See below.
 
 ## Why phase 5 exists
 
@@ -62,8 +76,14 @@ dies at the boundary.
 A red gate loops inside phase 5 — fix, `/code-review`, `/commit`, re-run — and does not advance
 until it is green, or until the failure has been accepted out loud.
 
-**Skip phase 5 on a single-ticket feature.** That ticket's scope is the branch's scope, so the phase
-would re-run what phase 4 just ran.
+**Phase 5 is skipped on a single-ticket feature, and only there.** That ticket's scope *is* the
+branch's scope, so both runs take the same fixed point over the same diff — the same review twice,
+the same suites twice. At two tickets or more it always runs.
+
+**This is a redundancy rule, not a size rule**, and the distinction is load-bearing. It says the work
+would be literally duplicate, not that the change is too small to be worth checking. It therefore
+does not generalise to *"a small change needs less process"* — nothing else is skippable. Read the
+other way, it takes phase 4 with it, and the test report and the code review go too.
 
 A feature's **facts** may live in more than one repository — a frontend whose behaviour the change
 depends on, a service that calls the endpoint being altered. Read them wherever they are; phase 1 is
@@ -79,7 +99,7 @@ tickets and still not know which phase is running, what comes next, or that anyt
 going on alongside the feature.
 
 So this skill keeps one more file, `.scratch/<feature-slug>/STATE.md`, **overwritten as the closing
-act of each phase** — after `/commit` finishes a ticket, after `/to-durable` writes its docs:
+act of each phase** — after `/commit` finishes a ticket, after `/to-durable` commits its docs:
 
 ```
 # State — email-language
@@ -227,8 +247,8 @@ on GitHub, GitLab, or Jira the directory simply holds the working files without 
 - **Do not skip phase 5 to save time.** It is the only step that moves anything into the repository
   permanently, and it runs before the PR precisely so the rationale lands in the same diff as the
   code it explains.
-- **Do not run phases 2–3 for a change that fits one window.** A bug fix with an obvious cause does
-  not need a spec and a ticket graph. Phase 1 still runs: mapping the code is what `/implement` wants
-  anyway, and the interview self-limits — a map that surfaces no fork leaves nothing to ask, so the
-  phase costs a few minutes and ends. What you skip is the paperwork whose only job is to survive a
-  context reset you are not going to need.
+- **Do not drop a phase because the change is small.** A one-line fix runs the same seven, minus the
+  single-ticket phase-5 exception above. The phases self-limit — an interview over a map with no fork
+  has nothing to ask, and a spec for a one-line fix is five lines — so the cost of running them on a
+  small change is minutes, while the cost of deciding case by case which ones a change has earned is
+  a rule nobody applies the same way twice.

@@ -127,7 +127,19 @@ someone who looked at it.
 A finding that is no longer true — fixed in this branch, or wrong when written — is marked `→
 dropped` with the reason, never silently removed.
 
-### 6. Report
+### 6. Commit what you wrote
+
+Commit the durable files with `/commit`, on the feature branch, before `/pr` runs.
+
+`/pr` computes its scope from **committed** work. An uncommitted ADR is absent from the PR that
+exists to carry it — which is this skill's whole purpose, unreachable by one missing step. Nothing
+errors: the files are on disk, the PR opens, and only the rationale is missing.
+
+This is also what makes the `':!docs/'` exclusion in `/pr`'s staleness check correct rather than
+theoretical. That check asks whether the test report predates the newest **code** commit, and this
+step guarantees a docs-only commit sits immediately before every PR.
+
+### 7. Report
 
 Name the durable files written, and stop. There is no manifest to append anywhere.
 

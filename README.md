@@ -43,11 +43,20 @@ to a skill that already exists.
 | 3. Slice it | `/to-tickets` | `issues/NN-*.md` with blocking edges |
 | 4. Build it | `/implement` | code, commits, a ticket-scoped `test-report.md` |
 | 5. Prove it | `/test-report` + `/code-review` | a branch-wide `test-report.md`, review findings |
-| 6. Harvest it | `/to-durable` | ADRs, known-issues, glossary, agent doc |
+| 6. Harvest it | `/to-durable` | ADRs, known-issues, glossary, agent doc — committed |
 | 7. Publish it | `/pr` | a draft PR, with the report as a comment |
 
 The organizing rule is that **every phase leaves an artifact behind**, so the next phase reads a file
-rather than remembering a conversation. Once that holds, a context reset costs nothing.
+rather than remembering a conversation. Once that holds, a context reset costs nothing. A phase that
+selected no work still writes its artifact — `/test-report` on a docs-only branch reports zero
+suites rather than exiting silently, because absence is the only signal the next phase has that a
+step never ran.
+
+All seven run on every feature, a one-line fix included; there is no size exemption. The single
+exception is phase 5, skipped on a **single-ticket** feature, where that ticket's scope *is* the
+branch's scope and the phase would re-run phase 4's gates over the same diff. That is a redundancy
+rule, and reading it as licence to do less on a small change is how phase 4 — which owns `/tdd`,
+`/code-review`, `/test-report`, and `/commit` — gets dropped without anything looking wrong.
 
 Every phase is also usable on its own. `/commit`, `/pr`, and `/test-report` in particular are worth
 having whether or not you ever run the full sequence.
