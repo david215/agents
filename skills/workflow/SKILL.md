@@ -244,9 +244,11 @@ on GitHub, GitLab, or Jira the directory simply holds the working files without 
 
 - **Do not re-explain a phase's skill here.** This file owns sequence and boundaries; each skill
   owns its method. Two copies drift, and this is the copy with no tests.
-- **Do not skip phase 5 to save time.** It is the only step that moves anything into the repository
-  permanently, and it runs before the PR precisely so the rationale lands in the same diff as the
-  code it explains.
+- **Do not skip phase 5 for time.** Phase 4's two gates are ticket-scoped by construction, so on a
+  multi-ticket feature nothing has yet checked the whole — *do these tickets together implement the
+  feature* is a question none of them asked. Phase 5 is where it gets asked, and the answer arrives
+  before a reviewer is looking rather than after. The single-ticket exception above is a different
+  claim entirely: there the two scopes coincide, so the check is not missing, it has already run.
 - **Do not drop a phase because the change is small.** A one-line fix runs the same seven, minus the
   single-ticket phase-5 exception above. The phases self-limit — an interview over a map with no fork
   has nothing to ask, and a spec for a one-line fix is five lines — so the cost of running them on a
