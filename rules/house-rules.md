@@ -97,18 +97,19 @@ context, never to a subagent.
 Full multi-agent orchestration (the `Workflow` tool, `/deep-research`) stays
 opt-in and is not covered here.
 
-**A subagent inherits nothing I have not pasted.** Measured, one probe per type:
-a `general-purpose` agent receives these rules and the project's `CLAUDE.md` in
-full; an `Explore` agent receives **neither**, and reported "absent" for every
-one. So the read-only type — the right one for a discovery sweep precisely
-because it cannot edit — is also the one that never sees §6. Paste what the task
-needs into the prompt rather than relying on inheritance. `/code-review` already
-does this with its smell baseline.
+**A subagent inherits nothing I have not pasted.**
 
-The same probe caught a second thing: what a `general-purpose` agent inherits is
-the parent's session-start snapshot, not the file on disk. Editing these rules
-mid-session does not reach agents spawned later in that session. Pasting is
-immune to that too.
+| Agent type | Inherits these rules + the project's `CLAUDE.md` |
+| --- | --- |
+| `general-purpose` | Yes — the session-start snapshot, not the file on disk |
+| `Explore` | No — neither |
+
+Editing these rules mid-session does not reach agents spawned later in that
+session. So the read-only type — the right one for a discovery sweep precisely
+because it cannot edit — is also the one that never sees §6.
+
+**A path is enough for something it can read; a constraint it must obey has to
+be in the prompt.**
 
 **The return contract for a delegated sweep is `file:line`, never a count.** §6
 does not relax because the grep happened somewhere else — it tightens, because
@@ -141,6 +142,21 @@ So:
 
 State which one you did. "Grepped and read all five call sites" and "grepped"
 are different claims, and only one of them supports a count.
+
+### Anti-inference and minimal provenance
+
+Two tests for any line in a **standing** document — a skill, an agent doc, an
+ADR, a glossary, a known-issues file:
+
+- **Anti-inference** — would a competent reader, working from the code alone,
+  arrive at the opposite? If no, cut it.
+- **Minimal provenance** — keep the failure mode, cut the story of learning it.
+  A fact about the world survives (a host's character cap, which agent types
+  inherit what); a fact about one of our past runs does not, and `git log -S`
+  recovers it from the deletion anyway.
+
+**Event** documents invert this. A commit body, a PR description, a findings-log
+line records a moment, and the narration *is* the content.
 
 ## 7. Response shape
 
