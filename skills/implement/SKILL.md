@@ -17,6 +17,34 @@ green, or until you have said out loud why a failure is being accepted.
 
 Once done, use /code-review to review the work.
 
+## Both gates run at ticket scope
+
+Tell `/test-report` to use **ticket scope** — the working tree, since this runs before `/commit`.
+Give `/code-review` the ticket's start point as its fixed point, and the **ticket file** as its spec
+source rather than the feature spec. Reviewed against the whole spec, every ticket but the last
+reports its siblings' unbuilt requirements as missing, and the Spec axis turns into noise you learn
+to skim.
+
+Ticket scope is only safe under `/workflow`, whose phase 5 runs both skills at branch scope before
+the PR. Running `/implement` standalone across several tickets means nothing checks the whole — do
+that run yourself at the end, and say that you did.
+
+## Delegate discovery, keep decisions
+
+A bounded, read-only question goes to an `Explore` subagent: every call site of `X`, every spec that
+builds a given fixture, every module importing a library you are changing. It comes back as
+`file:line` and costs the main window a few lines instead of a few thousand.
+
+Decisions and edits stay here. `Explore` has no `Edit` or `Write`, which is why it is the right type
+— the boundary is enforced by tooling rather than by this paragraph.
+
+It also inherits neither the user's rules nor the repo's `CLAUDE.md`, so paste what the sweep needs
+into the prompt, including the counting rule: **`file:line` lists, never counts.** An agent that
+greps and reports a number has thrown away the evidence somewhere nobody can inspect it.
+
+This is not "send the ticket to a subagent", which `/workflow` forbids. The line is that discovery
+answers a question you already have; implementation decides what to do about the answer.
+
 Commit your work using /commit to the current branch.
 
 ## Capture as you go

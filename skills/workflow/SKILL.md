@@ -1,12 +1,12 @@
 ---
 name: workflow
-description: Run a feature end to end — grill, spec, tickets, implement, extract, PR — resetting context at each phase boundary. Use when starting a feature that will outlast one context window.
+description: Run a feature end to end — grill, spec, tickets, implement, prove, extract, PR — resetting context at each phase boundary. Use when starting a feature that will outlast one context window.
 disable-model-invocation: true
 ---
 
 # Workflow
 
-Six phases from an idea to an open PR. This skill does not do any of the work — each phase belongs
+Seven phases from an idea to an open PR. This skill does not do any of the work — each phase belongs
 to a skill that already exists. What it owns is **the order, and where the context resets.**
 
 ## The problem this solves
@@ -24,16 +24,46 @@ nothing, and the boundaries below become cheap instead of frightening.
 | 1. Interrogate the design | `/grill-with-docs` | ADRs, glossary entries, `findings.md` |
 | 2. Write it down | `/to-spec` | `spec.md` |
 | 3. Slice it | `/to-tickets` | `issues/NN-*.md` with blocking edges |
-| 4. Build it | `/implement` | code, commits, `test-report.md` |
-| 5. Harvest it | `/to-durable` | ADRs, known-issues, glossary, agent doc |
-| 6. Publish it | `/pr` | a draft PR, with the report as a comment |
+| 4. Build it | `/implement` | code, commits, a ticket-scoped `test-report.md` |
+| 5. Prove it | `/test-report` + `/code-review` | a branch-wide `test-report.md`, review findings |
+| 6. Harvest it | `/to-durable` | ADRs, known-issues, glossary, agent doc |
+| 7. Publish it | `/pr` | a draft PR, with the report as a comment |
 
 Phase 1 writes ADRs and glossary entries as they crystallise — `/grill-with-docs` runs
 `/domain-modeling` for exactly that. There is no separate "persist the docs" step, and adding one
 would produce a second copy of decisions already written.
 
 `/implement` runs `/tdd`, `/code-review`, `/test-report`, and `/commit` itself. Do not call those
-from here.
+from here — phase 5 is the exception, and it calls two of them at a scope `/implement` never uses.
+
+## Why phase 5 exists
+
+`/implement` scopes both its gates to **the ticket**, not the branch: `/test-report` runs against the
+working tree, and `/code-review` takes the ticket's start point as its fixed point with the ticket
+file as its spec source. That is what stops ticket 06 re-running ticket 01's suites, and what stops
+the Spec axis reporting tickets 02–05's unbuilt requirements as missing on every run before the last.
+
+It also means nothing has checked the whole. Phase 5 is that check. It is a phase rather than a step
+on the end of phase 4 for the same reason the ticket close-out is one: work that rides on the end of
+another unit is the work that goes missing.
+
+Two runs, both at full branch scope:
+
+- **`/test-report`** against the integration branch. It overwrites
+  `.scratch/<feature-slug>/test-report.md`, which is what `/pr` posts — leave phase 4's last
+  ticket-scoped table in that file and the PR ships a three-row report of a six-ticket feature.
+- **`/code-review`** against the merge base, with `spec.md` as the spec source. *"Do these tickets
+  together implement the feature"* is only answerable at this scope.
+
+**Append the review's findings to `findings.md` before leaving this phase.** Every other phase
+captures as it goes, and phase 6 is the skill that exists to harvest them. A finding left in context
+dies at the boundary.
+
+A red gate loops inside phase 5 — fix, `/code-review`, `/commit`, re-run — and does not advance
+until it is green, or until the failure has been accepted out loud.
+
+**Skip phase 5 on a single-ticket feature.** That ticket's scope is the branch's scope, so the phase
+would re-run what phase 4 just ran.
 
 A feature's **facts** may live in more than one repository — a frontend whose behaviour the change
 depends on, a service that calls the endpoint being altered. Read them wherever they are; phase 1 is
@@ -56,7 +86,7 @@ act of each phase** — after `/commit` finishes a ticket, after `/to-durable` w
 # State — email-language
 
 Workflow: /workflow — read that skill before acting
-Phase:    4 of 6 — build it (`/implement`)
+Phase:    4 of 7 — build it (`/implement`)
 Next:     /implement 03-invitations-follow-organization-timezone
 Tickets:  01 done · 02 done · 03–06 not started
 Branch:   feat/email-language
@@ -139,6 +169,11 @@ The reset is also what fires the ticket's **close-out** — `/test-report`, `/co
 the STATE.md write. Tickets run back to back in one window blur the boundary, and the close-out is
 what goes missing: measured on a run where three tickets shipped with none of the four. Room left in
 the window is not the question. The stop is doing a second job.
+
+**After the last ticket → `/clear`, and again after phase 5.** Both are question 2. Phase 5 reads
+the branch, not the session that built it; phase 6 reads `findings.md`, not the session that ran the
+review. The second one is only safe because phase 5 writes its findings down — that write is what
+converts an otherwise-relevant context into a disposable one.
 
 The rest of the boundaries are genuine judgement calls. Ask the questions in order and take the
 first yes.

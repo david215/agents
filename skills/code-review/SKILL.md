@@ -24,6 +24,8 @@ Capture the diff command once: `git diff <fixed-point>...HEAD` (three-dot, so th
 
 Before going further, confirm the fixed point resolves (`git rev-parse <fixed-point>`) and the diff is non-empty. A bad ref or empty diff should fail here — not inside two parallel sub-agents.
 
+**Under `/implement`, the fixed point is the ticket's start**, not the integration branch — and step 2's spec source is then the ticket file, not the feature spec. Both narrowings matter: the diff one keeps ticket 06 from re-reviewing tickets 01–05, and the spec one keeps the Spec axis from reporting every unbuilt sibling requirement as missing. `/workflow`'s phase 5 runs this skill once at full branch scope against `spec.md`, which is where *"do these tickets together implement the feature"* is answered.
+
 ### 2. Identify the spec source
 
 Look for the originating spec, in this order:
@@ -72,6 +74,13 @@ Each smell reads *what it is* → *how to fix*; match it against the diff:
 - The brief: "Report: (a) requirements the spec asked for that are missing or partial; (b) behaviour in the diff that wasn't asked for (scope creep); (c) requirements that look implemented but where the implementation looks wrong. Quote the spec line for each finding. Under 400 words."
 
 If the spec is missing, skip the Spec sub-agent and note this in the final report.
+
+**Use a read-only agent type for both axes.** A reviewer that can edit is a reviewer that will
+occasionally fix what it found, which puts unreviewed changes into the diff under review.
+
+The "no other access" above is measured rather than cautious: a read-only `Explore` agent inherits
+neither the user's global rules nor the repo's `CLAUDE.md`. Anything an axis must *obey* belongs in
+its prompt. Paths it merely needs to *read* are fine to pass as paths — it has `Read`.
 
 ### 5. Aggregate
 

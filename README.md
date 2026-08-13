@@ -31,7 +31,7 @@ Then, per feature:
 /workflow
 ```
 
-## The six phases
+## The seven phases
 
 `/workflow` owns the order and where the context resets. Nothing else — each phase's method belongs
 to a skill that already exists.
@@ -41,9 +41,10 @@ to a skill that already exists.
 | 1. Interrogate the design | `/grill-with-docs` | ADRs, glossary entries, `findings.md` |
 | 2. Write it down | `/to-spec` | `spec.md` |
 | 3. Slice it | `/to-tickets` | `issues/NN-*.md` with blocking edges |
-| 4. Build it | `/implement` | code, commits, `test-report.md` |
-| 5. Harvest it | `/to-durable` | ADRs, known-issues, glossary, agent doc |
-| 6. Publish it | `/pr` | a draft PR, with the report as a comment |
+| 4. Build it | `/implement` | code, commits, a ticket-scoped `test-report.md` |
+| 5. Prove it | `/test-report` + `/code-review` | a branch-wide `test-report.md`, review findings |
+| 6. Harvest it | `/to-durable` | ADRs, known-issues, glossary, agent doc |
+| 7. Publish it | `/pr` | a draft PR, with the report as a comment |
 
 The organizing rule is that **every phase leaves an artifact behind**, so the next phase reads a file
 rather than remembering a conversation. Once that holds, a context reset costs nothing.

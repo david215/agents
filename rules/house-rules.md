@@ -97,6 +97,25 @@ context, never to a subagent.
 Full multi-agent orchestration (the `Workflow` tool, `/deep-research`) stays
 opt-in and is not covered here.
 
+**A subagent inherits nothing I have not pasted.** Measured, one probe per type:
+a `general-purpose` agent receives these rules and the project's `CLAUDE.md` in
+full; an `Explore` agent receives **neither**, and reported "absent" for every
+one. So the read-only type — the right one for a discovery sweep precisely
+because it cannot edit — is also the one that never sees §6. Paste what the task
+needs into the prompt rather than relying on inheritance. `/code-review` already
+does this with its smell baseline.
+
+The same probe caught a second thing: what a `general-purpose` agent inherits is
+the parent's session-start snapshot, not the file on disk. Editing these rules
+mid-session does not reach agents spawned later in that session. Pasting is
+immune to that too.
+
+**The return contract for a delegated sweep is `file:line`, never a count.** §6
+does not relax because the grep happened somewhere else — it tightens, because
+the evidence now sits in a context I cannot inspect. An agent reporting "14 call
+sites" has handed me a number with no way to check it; one reporting 14 paths
+with line numbers has handed me something I can open.
+
 ## 6. Tool output is evidence, not a conclusion
 
 **Never conclude from a line-oriented tool about something that can span

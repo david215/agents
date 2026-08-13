@@ -22,6 +22,24 @@ and less accurate than reading it.
 The map is never wasted work: `/implement` needs it regardless, and it is what tells you whether
 this feature needs a spec at all.
 
+### Delegate the sweep, read the hits yourself
+
+The map is the largest read in the whole workflow, and most of it is discardable — the files you
+opened only to rule out. Send the sweep to `Explore` subagents, one per question ("every call site of
+`X`", "every template under `Y`, and what wires each one"), and have each return **`file:line`
+pointers rather than conclusions**.
+
+Then open the ones that matter, here. The map *becomes* the design tree, so a summarised map is a
+secondary source at the one moment you most need a primary one. Pointers keep the delegation cheap
+without making the reasoning second-hand.
+
+`Explore` inherits neither the user's rules nor the repo's agent docs, so state the `file:line`
+contract in every prompt. A subagent reporting "seven call sites" has handed you a number you cannot
+check.
+
+The data survey below delegates on the same terms, and more comfortably: it is read-only by
+construction, and its return — counts, distributions, date ranges — is already small.
+
 ### Map the data too, when behaviour keys off it
 
 The codebase tells you what *can* happen. It does not tell you how often, to how many rows, or

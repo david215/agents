@@ -22,6 +22,30 @@ No `testing.md`? Read `package.json` scripts or the equivalent, run the narrowes
 find, and say in one line that the repo has no testing doc — an unrecorded constraint is exactly
 what this skill cannot infer.
 
+## Run the suites in a subagent
+
+Steps 1–5 stay in the main context: scope resolution and suite selection are cheap, and their
+reasoning is what the reader is owed. **Step 6 goes to a subagent.** A jest run emits thousands of
+lines, of which the report keeps one row per suite — carrying the rest into the main window is the
+largest avoidable context cost in a feature.
+
+That is a **precondition, not an implementation detail.** If this session cannot spawn subagents, say
+so and run in-context. Do not skip the run.
+
+Three rules bind it:
+
+- **One subagent, running the specs sequentially.** Never one per spec, never several at once.
+  Memory, not CPU, is the binding constraint on a monorepo, and a fan-out that looks like
+  parallelism is a machine outage. The tooling will encourage that fan-out; refuse it. One sequential
+  subagent has the same memory profile as running the specs here, which is the whole point.
+- **On failure, return the failing suites' full output.** A row reading `❌ fail` with no stack trace
+  sends the main context back to re-run the spec, and the delegation has saved nothing. Green suites
+  cost one row each; red ones cost what you were going to need anyway.
+- **Paste the constraints into the prompt.** Measured: a read-only `Explore` agent inherits neither
+  the user's rules nor the repo's `CLAUDE.md`. Give it the exact commands out of `testing.md`, the
+  suite list, and the two rules above. A path is enough for something it can read; a constraint it
+  must obey has to be in the prompt.
+
 ## Workflow
 
 ```
@@ -29,11 +53,16 @@ what this skill cannot infer.
 - [ ] 2. Classify changed files: touched specs vs source files
 - [ ] 3. Map impacted source files to candidate suites
 - [ ] 4. Build the suite list, dedup
-- [ ] 5. Run, respecting testing.md's constraints
-- [ ] 6. Emit the table
+- [ ] 5. Typecheck; stop if it is red
+- [ ] 6. Run, respecting testing.md's constraints
+- [ ] 7. Emit the table
 ```
 
 ### 1. Resolve scope
+
+Two scopes. The caller picks; **branch scope is the default when nobody said.**
+
+**Branch scope** — a direct invocation, or `/workflow`'s phase 5:
 
 ```bash
 git fetch origin <integration-branch> --prune
@@ -41,13 +70,26 @@ git merge-base HEAD origin/<integration-branch>
 git diff --name-only <merge_base>..HEAD
 ```
 
-If the user asks to include uncommitted work, add `git diff --name-only HEAD` and say so.
+If the user asks to include uncommitted work here, add `git diff --name-only HEAD` and say so.
 
-**Scope is the branch, not the ticket.** A feature built over many tickets hands this skill a growing
-suite set on every run, and each run overwrites the last (see *Where the report goes*) — so the run
-after the final ticket is the one that covers the whole feature. Mid-feature runs earn their cost by
-catching breakage early, and may narrow to the suites that ticket touched. Take the full branch-wide
-scope once the last ticket is in.
+**Ticket scope** — `/implement` closing out one ticket of many. `/commit` has not run yet, so the
+ticket's work is uncommitted and the scope is the working tree:
+
+```bash
+git diff --name-only HEAD                    # tracked, modified
+git ls-files --others --exclude-standard     # new, untracked
+```
+
+**Both commands, always.** `git diff` alone lists nothing the ticket created, and in feature work
+new files are most of them.
+
+Ticket scope exists so that ticket 06 does not re-run ticket 01's suites. It is an optimisation with
+a backstop, not a cheaper default: `/workflow` runs a branch-scope pass in phase 5, before the PR.
+**Used without that pass, ticket scope ships untested integration and says nothing about it** — so on
+a multi-ticket feature outside `/workflow`, run branch scope once at the end yourself.
+
+Each run overwrites the last (see *Where the report goes*). The branch-scope run is therefore the one
+that must come last, or the PR carries a table covering one ticket of six.
 
 ### 2. Classify changed files
 
@@ -78,7 +120,13 @@ Combine touched and impacted, dedup, and split by suite type. **If the list is e
 stop.** Do not fall back to running everything — on a large repo that is the single most expensive
 mistake available, and `testing.md` may forbid it outright.
 
-### 5. Run
+### 5. Typecheck before running anything
+
+`testing.md` names the command. A typecheck is far cheaper than a spec run and catches most
+signature-level breakage, so while it is red the suite run is only a slower way to learn the same
+thing. Fix it, then continue. Where the repo has no typecheck, say so in one line and go on.
+
+### 6. Run
 
 Follow `testing.md`. Do not batch spec files into one invocation when it says not to, and do not
 drop a heap flag or a worker limit because a run looked fine without it once.
@@ -92,7 +140,7 @@ debugging code that is fine. Put the reason in Notes.
 
 **Never report a pass the run output does not show.** On failure, capture the failing test names.
 
-### 6. Emit the table
+### 7. Emit the table
 
 ```markdown
 ## Test report — <branch>
