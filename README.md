@@ -1,11 +1,15 @@
-# skills
+# agents
 
-Seventeen agent skills that run a feature from an idea to an open PR, resetting context at each phase
-boundary. Built on top of [Matt Pocock's skills](https://github.com/mattpocock/skills), vendored and
-customized.
+Two artifacts. **Seventeen skills** that run a feature from an idea to an open PR, resetting context
+at each phase boundary — built on top of [Matt Pocock's skills](https://github.com/mattpocock/skills),
+vendored and customized. And **three rules** that load into every session regardless of what it is
+about.
+
+The difference is the trigger, not the content: a skill is repo-adaptive and invoked when its
+description matches; a rule is unconditional and always in context.
 
 ```bash
-npx skills add david215/skills -g --all
+npx skills add david215/agents -g --all
 ```
 
 ## Getting started on a new repo
@@ -88,6 +92,36 @@ identical.
 Neither is a `check.sh` entry. Both tests are semantic, and the only greppable part — those phrases —
 appears legitimately in the passages explaining the rule, so a check would need an exclusion list
 longer than the signal it finds.
+
+## Rules
+
+`rules/` holds three files that are always in context, never invoked:
+
+| File | What it is |
+| --- | --- |
+| `ponytail.md` | A YAGNI ladder — stop at the first rung that holds. Vendored from [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) (MIT — see [`LICENSE-ponytail`](./LICENSE-ponytail)). |
+| `karpathy.md` | Four behavioural constraints against common LLM coding failures. Vendored from [forrestchang/andrej-karpathy-skills](https://github.com/forrestchang/andrej-karpathy-skills) (MIT — see [`LICENSE-karpathy`](./LICENSE-karpathy)). |
+| `house-rules.md` | Mine. Honest communication, critical engagement, and the tiebreaker when the other two conflict. |
+
+The design rule above — *the repo answers where, the skill carries the obligation* — does not apply
+here, because a rule has no repo to ask. It is loaded before there is a task, let alone a codebase.
+
+Upstream ponytail ships two variants: the full `skills/ponytail/SKILL.md`, and a trimmed
+`.agents/rules/ponytail.md` built for exactly this slot. Take the trimmed one. The full skill body is
+2.6× the size and most of the excess — the intensity table, the `/ponytail lite|full|ultra` switch,
+the `argument-hint` machinery — is meaningless for a file that is never invoked, yet it is paid for
+in every context window. What the trimmed version drops that is *not* dead weight is its `Output`
+section, the terse-response contract; that lives in `house-rules.md` §7 instead.
+
+`ponytail.md` is byte-identical to upstream. `karpathy.md` is edited — narrower description, an added
+closing "these guidelines are working if" block — so diff it before pulling upstream changes:
+
+```bash
+git clone --depth 1 https://github.com/DietrichGebert/ponytail.git /tmp/pt
+git clone --depth 1 https://github.com/forrestchang/andrej-karpathy-skills.git /tmp/kp
+diff /tmp/pt/.agents/rules/ponytail.md rules/ponytail.md
+diff /tmp/kp/skills/karpathy-guidelines/SKILL.md rules/karpathy.md
+```
 
 ## What's here
 
@@ -172,17 +206,51 @@ Edit here, push, then reinstall. **Never `cp` into `~/.agents/skills/`.**
 
 ```bash
 ./check.sh && git commit … && git push     # reinstall pulls from the remote, so push first
-npx skills add david215/skills -g --all    # = --skill '*' --agent '*' -y
+npx skills add david215/agents -g --all   # = --skill '*' --agent '*' -y
 ```
 
-A copy produces a *working* install with no entry in `~/.agents/.skill-lock.json`. The CLI reports
-that as `Source: local`, and `skills update` only walks lock entries — so a copied skill is skipped
-forever while looking completely fine on disk. Four of these sat that way until `skills list -g` was
-read closely. `check.sh` cannot catch it either: it lints the repo, not the installation.
+A copy produces a *working* install with no lock entry, and `skills update` walks lock entries and
+nothing else — so a copied skill is skipped forever while looking completely fine on disk. `check.sh`
+cannot catch it either: it lints the repo, not the installation.
+
+**Adding a skill means adding it to [`.claude-plugin/plugin.json`](./.claude-plugin/plugin.json)
+too.** That manifest is what makes `skills list` group these seventeen under one heading instead of
+scattering them through the alphabet; the CLI stores its `name` as each skill's `pluginName`. Paths
+must start with `./` or they are ignored. Omitting a skill does not break its install — discovery
+searches `skills/` regardless — it just leaves that one ungrouped in the listing.
+
+### The lock file, and how it goes missing
+
+The lock lives at `~/.agents/.skill-lock.json`, or under `$XDG_STATE_HOME/skills/` if that is set.
+
+**`Source: local` means the skill has no lock entry.** It says nothing about how the files arrived. A
+`cp` reads as `local` — but so does a perfectly good install whose lock entry has since vanished, and
+the whole lock is discarded without warning if it is unreadable or written by an older CLI. So a
+version bump can void every entry at once, silently.
 
 ```bash
-npx skills list -g | grep -B1 local   # should print nothing
+npx skills list -g | grep -B1 'Source: local'   # should print nothing
 ```
+
+Read a hit as *unmanaged*, not *copied*. It once fired on all thirty installed skills, and the cause
+was one missing lock file rather than thirty bad installs.
+
+Restoring is just reinstalling from each source. Nothing is overwritten when the installed copies
+already match their source, so `diff -rq` them first and the repair is pure metadata:
+
+```bash
+npx skills add david215/agents -g --all
+npx skills add mattpocock/skills -g -y -a '*' -s ask-matt diagnosing-bugs \
+  improve-codebase-architecture prototype research triage wayfinder handoff wait-what writing-for-agents
+npx skills add vercel-labs/skills -g -y -a '*' -s find-skills
+```
+
+Two ways that goes wrong, both of which exit 0:
+
+- `-s` takes **space-separated** names. A comma-separated list parses as one bogus skill name, and
+  the CLI answers by printing every available skill — which reads like a successful run.
+- Omitting `-g` installs project-scoped into the current directory, creating `.agents/`, `.claude/`,
+  `agent/` and `skills-lock.json`, plus symlinks into `skills/` alongside the real ones.
 
 ## Checks
 

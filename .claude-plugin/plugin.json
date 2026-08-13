@@ -1,0 +1,24 @@
+{
+  "name": "david215-agents",
+  "description": "Seventeen agent skills that run a feature from an idea to an open PR, resetting context at each phase boundary.",
+  "repository": "https://github.com/david215/agents",
+  "skills": [
+    "./skills/code-review",
+    "./skills/codebase-design",
+    "./skills/commit",
+    "./skills/domain-modeling",
+    "./skills/grill-me",
+    "./skills/grill-with-docs",
+    "./skills/grilling",
+    "./skills/implement",
+    "./skills/pr",
+    "./skills/setup-matt-pocock-skills",
+    "./skills/setup-workflow",
+    "./skills/tdd",
+    "./skills/test-report",
+    "./skills/to-durable",
+    "./skills/to-spec",
+    "./skills/to-tickets",
+    "./skills/workflow"
+  ]
+}
