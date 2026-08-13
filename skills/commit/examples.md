@@ -41,9 +41,8 @@ Seven bullets, no visible ranking. A reviewer reads all seven before learning wh
    *how* the idempotency check works, not a second decision. Backoff and the shared constant are
    both the retry policy — one change-group, reviewed together.
 
-2. **Order leads with risk.** The original opened with the idempotency check by luck; regrouping
-   makes it deliberate. A duplicate payment callback is a money-correctness bug, which outranks a
-   reliability tuning change, which outranks a rename that changes no behaviour at all.
+2. **Order leads with risk.** A duplicate payment callback is a money-correctness bug, which
+   outranks a reliability tuning change, which outranks a rename that changes no behaviour at all.
 
 3. **Rationale nests, it never competes.** *Why the constraint rather than the application check*
    and *why 10s was wrong* sit under the changes they justify. As siblings they would read as five
@@ -53,10 +52,3 @@ Seven bullets, no visible ranking. A reviewer reads all seven before learning wh
    became a sub-bullet of bullet 1, not a trailing bullet of its own. Tests sort last only when they
    stand alone as the commit's actual subject — a test-only commit, or coverage added for code that
    was not otherwise touched.
-
-## Quick checklist
-
-- One top-level bullet per change-group. Merge; do not enumerate one bullet per sentence you thought of.
-- Order by blast radius: API and behaviour > data integrity and security > refactor, rename, test, docs.
-- Rationale and edge cases indent under the change they explain.
-- No length or count to pad toward. A one-concern commit gets one bullet.

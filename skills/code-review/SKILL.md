@@ -78,9 +78,8 @@ If the spec is missing, skip the Spec sub-agent and note this in the final repor
 **Use a read-only agent type for both axes.** A reviewer that can edit is a reviewer that will
 occasionally fix what it found, which puts unreviewed changes into the diff under review.
 
-The "no other access" above is measured rather than cautious: a read-only `Explore` agent inherits
-neither the user's global rules nor the repo's `CLAUDE.md`. Anything an axis must *obey* belongs in
-its prompt. Paths it merely needs to *read* are fine to pass as paths — it has `Read`.
+The "no other access" above is literal. Anything an axis must *obey* belongs in its prompt; paths it
+merely needs to *read* are fine to pass as paths — it has `Read`.
 
 ### 5. Aggregate
 

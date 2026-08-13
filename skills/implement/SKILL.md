@@ -38,9 +38,9 @@ builds a given fixture, every module importing a library you are changing. It co
 Decisions and edits stay here. `Explore` has no `Edit` or `Write`, which is why it is the right type
 — the boundary is enforced by tooling rather than by this paragraph.
 
-It also inherits neither the user's rules nor the repo's `CLAUDE.md`, so paste what the sweep needs
-into the prompt, including the counting rule: **`file:line` lists, never counts.** An agent that
-greps and reports a number has thrown away the evidence somewhere nobody can inspect it.
+Paste what the sweep needs into the prompt, including the counting rule: **`file:line` lists, never
+counts.** An agent that greps and reports a number has thrown away the evidence somewhere nobody can
+inspect it.
 
 This is not "send the ticket to a subagent", which `/workflow` forbids. The line is that discovery
 answers a question you already have; implementation decides what to do about the answer.
@@ -58,5 +58,4 @@ are mid-task, the surprise is a detour, and the moment passes. Append each to
 ```
 
 What counts: a defect in code you were only passing through, a constraint you measured, a gotcha that
-cost you an hour, a test you decided not to write and the consequence you accepted. Do not stop to
-judge importance or destination — `/to-durable` does that at the end, once, with everything visible.
+cost you an hour, a test you decided not to write and the consequence you accepted.

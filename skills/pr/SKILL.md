@@ -167,14 +167,6 @@ It goes in the section that asks **what changed** — first position inside it. 
 asks what effects are expected, even though a contract change is arguably the most effect-laden thing
 in the branch.
 
-Two reasons, and they decide it rather than merely leaning:
-
-- An effects section asks what a reader should **anticipate** — Korean templates make this explicit
-  with `예상`. A route list with tags is a factual inventory of what shipped, so it answers the wrong
-  question there, and it displaces the consequences that genuinely belong in that section.
-- The routes need the change-groups that explain them nearby. Split across two sections, a reviewer
-  reads a contract delta with its rationale one section away.
-
 The effects section then has a real job rather than a redundant one: the *consequences* of those
 route changes. `PATCH /organizations` accepting a new field is a change; every pre-existing
 organization silently switching email language because of it is an effect.
@@ -191,10 +183,10 @@ in one line when that happens, since it departs from the shape above.
   nothing on their own.
 - Claim no effect the diff does not show, and no test run the user did not report.
 - State an assumption in one line where the branch reads more than one way.
-- **Name nothing ephemeral.** A description outlives the branch; a ticket, a spec, a feature slug and
-  a `.scratch/` path do not — they are deleted after the merge. Describe what the branch does, not
-  which ticket asked for it or where the spec lives. If the repo's `vcs.md` says to link the spec
-  path because the tracker has no linkable ID, that instruction predates this rule and is wrong: a
+- **Name nothing ephemeral.** Describe what the branch does, not which ticket asked for it or where
+  the spec lives — a description outlives the branch and those do not. If the repo's `vcs.md` says to
+  link the spec path because the tracker has no linkable ID, that instruction predates this rule and
+  is wrong: a
   path into a deleted directory links to nothing. The test-report comment is the one exception this
   skill already makes, and it resolves before the merge rather than after.
 
@@ -203,10 +195,9 @@ in one line when that happens, since it departs from the shape above.
 Everything about tests belongs in a **comment**: which spec files moved, and what happened when they
 ran. The body only points at it.
 
-The reason is staleness, not size. A description is the PR's standing summary of what the branch
-does; a test report is a point-in-time artifact that a single further push invalidates. Buried in the
-description it becomes a table every reviewer scrolls past forever. On Azure DevOps the description
-cap forces this anyway; on GitHub nothing forces it and it is still correct.
+The reason is staleness, not size: a test report is a point-in-time artifact that a single further
+push invalidates. On Azure DevOps the description cap forces this anyway; on GitHub nothing forces it
+and it is still correct.
 
 **Resolve the report before writing this section** — whether it exists decides what you may check.
 

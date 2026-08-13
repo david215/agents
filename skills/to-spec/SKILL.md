@@ -87,5 +87,4 @@ last:
 ```
 
 The spec describes what is being built; the log holds what you learned while working out how. Do not
-inflate the spec with either the defect or its analysis, and do not stop to decide where the finding
-eventually belongs — `/to-durable` does that once, at the end, with the whole feature visible.
+inflate the spec with either the defect or its analysis.

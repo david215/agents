@@ -41,8 +41,7 @@ Three rules bind it:
 - **On failure, return the failing suites' full output.** A row reading `❌ fail` with no stack trace
   sends the main context back to re-run the spec, and the delegation has saved nothing. Green suites
   cost one row each; red ones cost what you were going to need anyway.
-- **Paste the constraints into the prompt.** Measured: a read-only `Explore` agent inherits neither
-  the user's rules nor the repo's `CLAUDE.md`. Give it the exact commands out of `testing.md`, the
+- **Paste the constraints into the prompt.** Give it the exact commands out of `testing.md`, the
   suite list, and the two rules above. A path is enough for something it can read; a constraint it
   must obey has to be in the prompt.
 
@@ -170,8 +169,7 @@ Print it, **and write it to `.scratch/<feature-slug>/test-report.md`** — the s
 create the directory if it does not exist. Overwrite any previous report; the current run is the only
 one that matters.
 
-That directory exists on every repo whatever the issue tracker is, which is the point — a path that
-only resolved on a local-markdown tracker would make this handoff silently do nothing everywhere else.
+That directory exists on every repo whatever the issue tracker is.
 
 That file is the handoff. `/pr` reads it and posts it as a comment — and it has to be a file, not
 context, because `/implement` runs this skill at the end of a feature while `/pr` runs later,

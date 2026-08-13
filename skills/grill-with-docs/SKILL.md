@@ -33,9 +33,8 @@ Then open the ones that matter, here. The map *becomes* the design tree, so a su
 secondary source at the one moment you most need a primary one. Pointers keep the delegation cheap
 without making the reasoning second-hand.
 
-`Explore` inherits neither the user's rules nor the repo's agent docs, so state the `file:line`
-contract in every prompt. A subagent reporting "seven call sites" has handed you a number you cannot
-check.
+State the `file:line` contract in every prompt. A subagent reporting "seven call sites" has handed
+you a number you cannot check.
 
 The data survey below delegates on the same terms, and more comfortably: it is read-only by
 construction, and its return — counts, distributions, date ranges — is already small.
@@ -55,19 +54,15 @@ Do this **before round one**, alongside the code map, and certainly before `/to-
 survey want the same timing for the same reason: **the map prices existence, the survey prices
 importance.** A question deserves the user's attention in proportion to the population it governs, and
 only the survey knows the population — so asking first allocates the scarcest thing in the process,
-round-one attention, by guesswork. One run spent a round-one slot on a fork governing 17 rows, while
-the question that reshaped the whole feature was answered later by a single `count(*)` returning zero.
+round-one attention, by guesswork.
 
 Three things a survey does that reading code cannot:
 
-- **Sizes the work.** "Correct the organizations with a wrong timezone" was heading for a
-  classification script. The count came back **two**, and the script became two `UPDATE` statements
-  and one fewer ticket.
+- **Sizes the work.** A population you assumed needed a classification script can turn out small
+  enough for two `UPDATE` statements and one fewer ticket.
 - **Contradicts recollection.** Treat what the user remembers about their own data as a hypothesis.
-  Six organizations everyone recalled as foreign turned out to be abandoned single-day trials with
-  zero students; correcting them would have changed nothing any human would ever see.
-- **Reorders the feature.** The half of that feature everyone was focused on governed a path used
-  **37 times in the product's lifetime**, while the half nobody was discussing ran on every signup.
+- **Reorders the feature.** The half everyone is focused on may govern a path used a handful of
+  times in the product's lifetime, while the half nobody is discussing runs on every signup.
   Nothing in the code says which is which.
 
 The corollary is the point: a survey is what makes *"does this need to exist at all?"* answerable

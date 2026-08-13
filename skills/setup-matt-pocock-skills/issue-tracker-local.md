@@ -28,9 +28,8 @@ same diff as the code it explains.
 on every tracker, because `.scratch/<feature-slug>/` exists on every tracker; what differs on this one
 is only how much sits inside it — the spec and tickets as well as the working files.
 
-**There is no recovery.** `.scratch/` is gitignored, so a deleted directory is gone: not in a branch,
-not in a stash, not on the remote. That is the point — a file absent from the repository cannot be
-read stale by anyone on a fresh clone. It is also why the procedure checks before it removes.
+**There is no recovery** — `.scratch/` is gitignored, so a deleted directory is not in a branch, a
+stash, or the remote. The `/workflow` procedure checks before it removes.
 
 ## When a skill says "publish to the issue tracker"
 

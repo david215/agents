@@ -42,8 +42,7 @@ every alternative felt worth arguing at the time it was rejected. Anchor it on t
 If not, it is not a rejected option — it is the history of how you arrived, and it goes. A feature
 that weighed renaming a column against mapping it, then shipped an add-and-drop instead, has no
 mapping decision left to record: after the drop there is no column to map, so nobody can propose it
-and the argument protects no one. Measured on one such ADR, this single question cut it from 160 lines
-to 76 with no anti-inference property lost.
+and the argument protects no one.
 
 The same question is what stops the *motivation and history* line above from being read as "history of
 the problem" only. It also covers history of the **document**.
@@ -94,13 +93,8 @@ Scan `docs/adr/` for the highest existing number and increment by one.
 
 ## When to offer an ADR
 
-All three of these must be true:
-
-1. **Hard to reverse** — the cost of changing your mind later is meaningful
-2. **Surprising without context** — a future reader will look at the code and wonder "why on earth did they do it this way?"
-3. **The result of a real trade-off** — there were genuine alternatives and you picked one for specific reasons
-
-If a decision is easy to reverse, skip it — you'll just reverse it. If it's not surprising, nobody will wonder why. If there was no real alternative, there's nothing to record beyond "we did the obvious thing."
+The three-part test lives in [SKILL.md](./SKILL.md)'s *Offer ADRs sparingly*, where the decision is
+actually made.
 
 ### What qualifies
 

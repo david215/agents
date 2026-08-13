@@ -39,5 +39,11 @@ done
 grep -rn 'docs/agents/findings' skills/ README.md 2>/dev/null \
   && say "docs/agents/findings.md is not generated any more."
 
+# 6. Minimal provenance (house-rules §6): a skill states the failure mode, not the story of
+#    learning it. pr/hosts/ is excluded — a host's measured cap is a fact about the world.
+#    No space before the punctuation: the text is "Measured:", not "Measured :".
+grep -rnE '[Mm]easured(:| on )' skills/ 2>/dev/null | grep -v 'pr/hosts/' \
+  && say "Provenance in a skill. State the failure mode; git log -S recovers the incident."
+
 if [ -s "$LOG" ]; then cat "$LOG"; rm -f "$LOG"; exit 1; fi
 rm -f "$LOG"; echo "ok"

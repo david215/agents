@@ -105,9 +105,8 @@ In either form, avoid specific file paths or code snippets — they go stale fas
 
 **State scope by extent, not by count.** "Removes all of its call sites" survives contact with the
 code; "removes all four of its call sites" is a measurement taken from reasoning, and a wrong one
-makes a correct implementation read as incomplete. Measured: counts in acceptance criteria were wrong
-twice in one six-ticket feature, in both directions. Where a number genuinely carries the
-requirement, grep for it before writing it down.
+makes a correct implementation read as incomplete. Where a number genuinely carries the requirement,
+grep for it before writing it down.
 
 ## Capture as you go
 

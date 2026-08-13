@@ -73,17 +73,10 @@ everywhere else.
 ## Instructions need an addressee with a turn
 
 Every instruction in a skill is executed by somebody. Name them, then check they have a turn at the
-moment the instruction names.
-
-`/workflow` shipped a rule to overwrite `STATE.md` "immediately before the reset". No such moment
-exists for the agent: `/clear` is typed by the user and yields no turn beforehand, so the rule was
-addressed to the only party that could not carry it out, and quietly became something the user had
-to remember instead. Retimed to the closing act of each phase — an act the agent does perform — it
-works.
-
-What earns this a rule is that the failure is **silent**. Nothing errors; the file just goes stale
-while looking maintained. Phrasings that fail the test: *before the reset*, *on exit*, *when the
-session ends*, *when the user leaves*.
+moment the instruction names. `/workflow` once told the agent to overwrite `STATE.md` "immediately
+before the reset" — a moment that does not exist for it, since `/clear` is typed by the user and
+yields no turn beforehand. What earns this a rule is that the failure is **silent**: nothing errors,
+the file just goes stale while looking maintained.
 
 The related case is an instruction whose addressee is right but whose **capability** is not
 guaranteed — `/code-review` requires sub-agents, and a session can forbid them. That one states the
@@ -92,7 +85,7 @@ identical.
 
 Neither is a `check.sh` entry. Both tests are semantic, and the only greppable part — those phrases —
 appears legitimately in the passages explaining the rule, so a check would need an exclusion list
-longer than the signal it finds.
+longer than the signal it finds. The operative forms live in [`CLAUDE.md`](./CLAUDE.md).
 
 ## Rules
 
@@ -168,7 +161,7 @@ those files, holding a copy is the only mechanism available.
 
 | Skill | Change | Why |
 | --- | --- | --- |
-| `grill-me` | dropped `disable-model-invocation` | so `/workflow` can invoke it |
+| `grill-me` | dropped `disable-model-invocation` | so it can be invoked as a skill, not only typed as `/grill-me`. Nothing here calls it — `/workflow` phase 1 runs `/grill-with-docs` |
 | `grilling` | fact-finding no longer mandates a sub-agent; each question goes on **both** prose and `AskUserQuestion` | a session can forbid sub-agents and no lookup needs one; the prose template predates the tool, so every run rediscovered the overlap |
 | `grill-with-docs` | ″, plus **Capture as you go**, **Map the territory before round one**, **Map the data too** (timed before round one, with a hand-over path when the database is unreachable), **Name the feature after its outcome** | ″, plus findings-log capture, and the three things a grilling cannot get from the user: code shape, production data, a name that survives discovery. The map prices existence; only the survey prices importance, so asking first allocates round-one attention by guesswork |
 | `to-spec` | ″, plus a **feature-slug checkpoint** after the spec is written | ″, plus the spec is the last artifact landing before the branch exists, so it is the last moment a rename costs one `mv` |

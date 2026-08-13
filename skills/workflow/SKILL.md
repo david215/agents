@@ -76,8 +76,7 @@ assumes exactly one of each.
 The table above is only half of what survives a reset. Every phase leaves an artifact of its
 **content**, and none leaves one of its **position** — a fresh session can read `spec.md` and six
 tickets and still not know which phase is running, what comes next, or that anything unusual is
-going on alongside the feature. Measured on the first real run: the design was fully recoverable
-from the artifacts inside a minute, and the process state was not recoverable at all.
+going on alongside the feature.
 
 So this skill keeps one more file, `.scratch/<feature-slug>/STATE.md`, **overwritten as the closing
 act of each phase** — after `/commit` finishes a ticket, after `/to-durable` writes its docs:
@@ -105,9 +104,8 @@ before that pointer existed needs the line added by hand, because generated repo
 
 **`Next:` carries the command to run, not a description of it.** A resuming session reads
 `ticket 03` as work to pick up and starts editing files; it reads `/implement 03-…` as the thing to
-type. Measured: a session that resumed on the descriptive form skipped the phase's skill for three
-consecutive tickets, and with it the `/tdd`, `/test-report`, and `/code-review` that skill owns.
-Naming a skill on the `Phase:` line above does not substitute — it identifies, it does not instruct.
+type — and with it the `/tdd`, `/test-report`, and `/code-review` that skill owns. Naming a skill on
+the `Phase:` line above does not substitute — it identifies, it does not instruct.
 
 It is a bookmark, not a log. No history, no reasoning, nothing a fresh session would rather read in
 `spec.md` — those belong to the artifacts that already hold them, and a second copy here is a copy
@@ -115,10 +113,8 @@ that goes stale. `Also:` is the line that earns its keep most often, because sid
 experiments live nowhere else.
 
 Write it when the **work** completes, not when the **context** resets. `/clear` is typed by the user
-and leaves the agent no turn to act first, so any rule shaped like "update this immediately before
-the reset" cannot be obeyed by the party who has to obey it — it silently becomes something the user
-must remember to ask for, which is the manual step the file exists to remove. Closing each phase with
-the write means the bookmark is already current whenever the reset arrives, announced or not.
+and leaves the agent no turn to act first. Closing each phase with the write means the bookmark is
+already current whenever the reset arrives, announced or not.
 
 It also settles which boundaries need a write, for free: the ones that do not are exactly the ones
 where nothing finished.
@@ -159,16 +155,15 @@ tree gates subagents on work that runs with you away from the keyboard.
 
 Nor in parallel across worktrees, however clean the ticket graph looks. A blocking edge records
 whether B needs A's **output** — parallel branches need the stricter property that A and B never
-touch the same bytes, and `/to-tickets` does not compute it: measured on a feature whose tickets 01
-and 02 each declared the other independent, correctly, then edited three files in common, two of
-them specs both were deleting fixture lines from. Parallel runs also multiply the test runner's
+touch the same bytes, and `/to-tickets` does not compute it. Two tickets can be genuinely
+output-independent and still edit the same spec files, both deleting fixture lines from them.
+Parallel runs also multiply the test runner's
 resource footprint and share one dev database — a constraint `docs/agents/testing.md` records if
 anything does.
 
 The reset is also what fires the ticket's **close-out** — `/test-report`, `/code-review`, `/commit`,
 the STATE.md write. Tickets run back to back in one window blur the boundary, and the close-out is
-what goes missing: measured on a run where three tickets shipped with none of the four. Room left in
-the window is not the question. The stop is doing a second job.
+what goes missing. Room left in the window is not the question. The stop is doing a second job.
 
 **After the last ticket → `/clear`, and again after phase 5.** Both are question 2. Phase 5 reads
 the branch, not the session that built it; phase 6 reads `findings.md`, not the session that ran the

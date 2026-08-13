@@ -70,18 +70,5 @@ The comment that pairs with it, posted in Step 7:
 The cascade and the "second owner is untouched" carve-out are one group, because a reviewer decides
 them together.
 
-**Labels carry no content.** `**Withdrawal blocker check**` names the group; the fact lives in the
-child. A reader skimming only the bold lines gets the shape of the branch.
-
-**Depth-3 used exactly once**, for the call-site convention under the retry detail. It is an escape
-hatch, not a way to enumerate files.
-
-**`DELETE /account/withdrawal` is `(changed)`, not `(BREAKING)`** — a new blocking error path is not
-the contract shape moving, even though it turns a previously-succeeding caller into a failure.
-
-**`GET /organization` qualifies with no request or response schema change at all.** Its side effects
-moved, and a caller relying on the old behaviour is surprised. This is the entry a narrow
-"did the schema change" reading drops, and it is often the most important one in the PR.
-
-**`Tests` is a pointer.** Both the file list and the results sit in the comment, where full paths
-fit without the brace-expansion shorthand a 4,000-character description used to force.
+**Depth-3 used exactly once**, for the call-site convention under the retry detail. In a body this
+size that is the calibration: an escape hatch, not a way to enumerate files.
