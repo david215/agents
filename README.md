@@ -9,7 +9,7 @@ The difference is the trigger, not the content: a skill is repo-adaptive and inv
 description matches; a rule is unconditional and always in context.
 
 ```bash
-npx skills add david215/agents -g --all
+npx skills add david215/agents -g -s '*' -y -a claude-code codex cursor gemini-cli
 ```
 
 ## Getting started on a new repo
@@ -200,12 +200,19 @@ Edit here, push, then reinstall. **Never `cp` into `~/.agents/skills/`.**
 
 ```bash
 ./check.sh && git commit … && git push     # reinstall pulls from the remote, so push first
-npx skills add david215/agents -g --all   # = --skill '*' --agent '*' -y
+npx skills add david215/agents -g -s '*' -y -a claude-code codex cursor gemini-cli
 ```
 
 A copy produces a *working* install with no lock entry, and `skills update` walks lock entries and
 nothing else — so a copied skill is skipped forever while looking completely fine on disk. `check.sh`
 cannot catch it either: it lints the repo, not the installation.
+
+**Name the agents; do not use `--all`.** It expands to `--agent '*'`, which targets all 75 agents the
+CLI knows about — creating a `skills/` directory for every one, whether or not that agent is
+installed. It also fails loudly on the two that cannot install globally, printing two lines per skill
+that read like a broken install and are not. The four named above are the agents actually present
+here; add one when you install one. `claude-code` gets a symlink into `~/.agents/skills`, the rest
+read that store directly.
 
 **Adding a skill means adding it to [`.claude-plugin/plugin.json`](./.claude-plugin/plugin.json)
 too.** That manifest is what makes `skills list` group these seventeen under one heading instead of
@@ -233,16 +240,17 @@ Restoring is just reinstalling from each source. Nothing is overwritten when the
 already match their source, so `diff -rq` them first and the repair is pure metadata:
 
 ```bash
-npx skills add david215/agents -g --all
-npx skills add mattpocock/skills -g -y -a '*' -s ask-matt diagnosing-bugs \
+npx skills add david215/agents -g -s '*' -y -a claude-code codex cursor gemini-cli
+npx skills add mattpocock/skills -g -y -a claude-code codex cursor gemini-cli -s ask-matt diagnosing-bugs \
   improve-codebase-architecture prototype research triage wayfinder handoff wait-what writing-for-agents
-npx skills add vercel-labs/skills -g -y -a '*' -s find-skills
+npx skills add vercel-labs/skills -g -y -a claude-code codex cursor gemini-cli -s find-skills
 ```
 
 Two ways that goes wrong, both of which exit 0:
 
-- `-s` takes **space-separated** names. A comma-separated list parses as one bogus skill name, and
-  the CLI answers by printing every available skill — which reads like a successful run.
+- `-s` and `-a` both take **space-separated** names. A comma-separated list parses as one bogus name.
+  For `-s` the CLI answers by printing every available skill, which reads like a successful run; for
+  `-a` it prints `Invalid agents:` with the whole list echoed back as a single name.
 - Omitting `-g` installs project-scoped into the current directory, creating `.agents/`, `.claude/`,
   `agent/` and `skills-lock.json`, plus symlinks into `skills/` alongside the real ones.
 

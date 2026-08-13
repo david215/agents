@@ -10,7 +10,7 @@ working install with no lock entry, and `skills update` walks lock entries and n
 copied skill is skipped forever while looking completely fine on disk.
 
     ./check.sh && git commit … && git push
-    npx skills add david215/agents -g --all
+    npx skills add david215/agents -g -s '*' -y -a claude-code codex cursor gemini-cli
 
 **Run `./check.sh` before committing.** Regression guard — every entry exists because that thing
 already shipped broken once.
