@@ -38,17 +38,15 @@ from here — phase 5 is the exception, and it calls two of them at a scope `/im
 
 ## Every phase runs, whatever the size
 
-**Phases 1–4, 6 and 7 run on every feature, a one-line bug fix included.** There is no size
-exemption and no judgement call about what a change deserves. A tiny change produces a five-line
-`spec.md` and a one-node ticket graph — a few minutes, against a phase order that then holds without
-anyone having to reason about it.
+**Phases 1–4, 6 and 7 run on every feature, a one-line bug fix included.** The phases self-limit — an
+interview over a map with no fork has nothing to ask, a spec for a one-line fix is five lines — so
+there is no size exemption to judge.
 
-Phase 4 is the one people drop, because on a small change it looks like "just write the code". It is
-not: `/implement` owns `/tdd`, `/code-review`, `/test-report`, and `/commit`. Skipping it skips every
-gate at once, and the loss is silent — the code still gets written, so nothing looks wrong until the
-PR has no test report and nothing has been reviewed.
+Phase 4 is the one that looks skippable on a small change, where it reads as "just write the code".
+Dropping it fails silently: the code still gets written, so nothing looks wrong until the PR has no
+test report and nothing has been reviewed.
 
-Phase 5 is the single exception, and it is not a size rule. See below.
+Phase 5 is the single exception, and it is a redundancy rule rather than a size one — see below.
 
 ## Why phase 5 exists
 
@@ -80,10 +78,8 @@ until it is green, or until the failure has been accepted out loud.
 branch's scope, so both runs take the same fixed point over the same diff — the same review twice,
 the same suites twice. At two tickets or more it always runs.
 
-**This is a redundancy rule, not a size rule**, and the distinction is load-bearing. It says the work
-would be literally duplicate, not that the change is too small to be worth checking. It therefore
-does not generalise to *"a small change needs less process"* — nothing else is skippable. Read the
-other way, it takes phase 4 with it, and the test report and the code review go too.
+**This is a redundancy rule, not a size rule.** It says the work would be literally duplicate, not
+that the change is too small to be worth checking, and read the other way it takes phase 4 with it.
 
 A feature's **facts** may live in more than one repository — a frontend whose behaviour the change
 depends on, a service that calls the endpoint being altered. Read them wherever they are; phase 1 is
@@ -245,12 +241,6 @@ on GitHub, GitLab, or Jira the directory simply holds the working files without 
 - **Do not re-explain a phase's skill here.** This file owns sequence and boundaries; each skill
   owns its method. Two copies drift, and this is the copy with no tests.
 - **Do not skip phase 5 for time.** Phase 4's two gates are ticket-scoped by construction, so on a
-  multi-ticket feature nothing has yet checked the whole — *do these tickets together implement the
-  feature* is a question none of them asked. Phase 5 is where it gets asked, and the answer arrives
-  before a reviewer is looking rather than after. The single-ticket exception above is a different
-  claim entirely: there the two scopes coincide, so the check is not missing, it has already run.
-- **Do not drop a phase because the change is small.** A one-line fix runs the same seven, minus the
-  single-ticket phase-5 exception above. The phases self-limit — an interview over a map with no fork
-  has nothing to ask, and a spec for a one-line fix is five lines — so the cost of running them on a
-  small change is minutes, while the cost of deciding case by case which ones a change has earned is
-  a rule nobody applies the same way twice.
+  multi-ticket feature *do these tickets together implement the feature* is a question none of them
+  asked. The single-ticket exception above is the other claim: there the scopes coincide, so the check
+  has already run rather than gone missing.

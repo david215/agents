@@ -54,9 +54,7 @@ step never ran.
 
 All seven run on every feature, a one-line fix included; there is no size exemption. The single
 exception is phase 5, skipped on a **single-ticket** feature, where that ticket's scope *is* the
-branch's scope and the phase would re-run phase 4's gates over the same diff. That is a redundancy
-rule, and reading it as licence to do less on a small change is how phase 4 — which owns `/tdd`,
-`/code-review`, `/test-report`, and `/commit` — gets dropped without anything looking wrong.
+branch's scope and the phase would re-run phase 4's gates over the same diff.
 
 Every phase is also usable on its own. `/commit`, `/pr`, and `/test-report` in particular are worth
 having whether or not you ever run the full sequence.

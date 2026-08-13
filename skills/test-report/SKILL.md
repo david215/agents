@@ -119,24 +119,16 @@ Combine touched and impacted, dedup, and split by suite type. Do not fall back t
 when it comes out short — on a large repo that is the single most expensive mistake available, and
 `testing.md` may forbid it outright.
 
-**An empty list still produces a report.** Write the file, say no suites were impacted, and skip to
-Step 7 — do not stop without writing. A docs-only branch is the ordinary case here, and the report is
-what records that no run was owed:
+**An empty list still produces a report.** Write the file and skip to Step 7 — do not stop without
+writing. A docs-only branch is the ordinary case, and the report is what records that no run was owed:
 
 ```markdown
 ## Test report — docs/rewrite-adr-0015
 
-No suites impacted.
-
-Scope: `git diff --name-only <merge-base>..HEAD` — 3 files, all under `docs/`.
-No source file changed and no spec file changed, so nothing selects a suite.
+No suites impacted. Scope: 3 files, all under `docs/` — no source or spec file changed.
 
 **Summary:** 0 suites. No test run owed.
 ```
-
-The alternative — printing that and exiting — leaves `/pr` unable to tell *no run was owed* from *no
-run happened*, since both are a missing file. It would then have to re-derive the changed-file list
-to tell them apart, putting suite-selection logic in a skill that must not carry any.
 
 ### 5. Typecheck before running anything
 
@@ -189,7 +181,8 @@ create the directory if it does not exist. Overwrite any previous report; the cu
 one that matters.
 
 **Every run writes the file, including one that selected no suites.** The file's absence is the only
-signal `/pr` has that this skill never ran, so an exit without one makes that signal ambiguous.
+signal `/pr` has that this skill never ran, so an exit without one leaves *no run was owed* and *no run
+happened* indistinguishable.
 
 That directory exists on every repo whatever the issue tracker is.
 

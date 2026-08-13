@@ -131,13 +131,11 @@ dropped` with the reason, never silently removed.
 
 Commit the durable files with `/commit`, on the feature branch, before `/pr` runs.
 
-`/pr` computes its scope from **committed** work. An uncommitted ADR is absent from the PR that
-exists to carry it — which is this skill's whole purpose, unreachable by one missing step. Nothing
-errors: the files are on disk, the PR opens, and only the rationale is missing.
+`/pr` computes its scope from **committed** work, and skipping this errors nowhere: the files are on
+disk, the PR opens, and only the rationale is missing.
 
-This is also what makes the `':!docs/'` exclusion in `/pr`'s staleness check correct rather than
-theoretical. That check asks whether the test report predates the newest **code** commit, and this
-step guarantees a docs-only commit sits immediately before every PR.
+`/pr`'s staleness check also excludes `docs/` on the assumption that a docs-only commit sits
+immediately before every PR. This step is what puts it there.
 
 ### 7. Report
 
