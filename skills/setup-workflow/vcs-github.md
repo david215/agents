@@ -94,9 +94,8 @@ practice, so no length budget is enforced here and long content stays in the des
 > Unverified: the exact cap has not been measured against this host the way Azure DevOps' 4,000 /
 > 150,000 split was. Confirm before relying on it for anything that pushes size.
 
-The one thing worth keeping regardless: **the test report goes in a comment, not the description.**
-Not for length — a description is the PR's standing summary, and burying a run log in it means
-every reviewer scrolls past a table that was already stale by the second push.
+`/pr` still posts the test report as a comment rather than in the description. That rule does not come
+from a cap, so it lives in the skill.
 
 ## Commands
 

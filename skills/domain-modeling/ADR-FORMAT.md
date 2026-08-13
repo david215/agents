@@ -44,14 +44,11 @@ that weighed renaming a column against mapping it, then shipped an add-and-drop 
 mapping decision left to record: after the drop there is no column to map, so nobody can propose it
 and the argument protects no one.
 
-The same question is what stops the *motivation and history* line above from being read as "history of
-the problem" only. It also covers history of the **document**.
-
 ### An ADR states the current decision, not its own revision history
 
 Git holds the revisions. "This ADR originally argued", "corrected on <date>", "superseded, and worth
 reading as a record of having weighed it" are changelog entries inside a document that already has a
-changelog, and they are the most common way a rewritten ADR ends up longer than the one it replaced.
+changelog.
 
 When a decision changes, **overwrite it and delete the reference to what was there before.** That is
 sufficient long-term documentation in the ordinary case. Keep the prior position only when a reader

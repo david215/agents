@@ -50,23 +50,14 @@ Read-only, always. Aggregates before identities: counts, distributions and date 
 pull actual rows only once the count is small enough that a human will review them. A grilling never
 writes to production.
 
-Do this **before round one**, alongside the code map, and certainly before `/to-spec`. The map and the
-survey want the same timing for the same reason: **the map prices existence, the survey prices
-importance.** A question deserves the user's attention in proportion to the population it governs, and
-only the survey knows the population — so asking first allocates the scarcest thing in the process,
-round-one attention, by guesswork.
+Do this **before round one**, alongside the code map, and certainly before `/to-spec`. **The map
+prices existence, the survey prices importance** — a question deserves the user's attention in
+proportion to the population it governs, and only the survey knows the population.
 
-Three things a survey does that reading code cannot:
-
-- **Sizes the work.** A population you assumed needed a classification script can turn out small
-  enough for two `UPDATE` statements and one fewer ticket.
-- **Contradicts recollection.** Treat what the user remembers about their own data as a hypothesis.
-- **Reorders the feature.** The half everyone is focused on may govern a path used a handful of
-  times in the product's lifetime, while the half nobody is discussing runs on every signup.
-  Nothing in the code says which is which.
-
-The corollary is the point: a survey is what makes *"does this need to exist at all?"* answerable
-with a number instead of an intuition.
+A survey reorders and resizes the feature, not just the questions: a population you assumed needed a
+classification script turns out small enough for two `UPDATE` statements and one fewer ticket, or the
+half nobody is discussing runs on every signup while the half under debate has run twice in the
+product's lifetime. Nothing in the code says which is which.
 
 **If you cannot reach the database, say so and hand over the queries.** Credentials fail, sandboxes
 refuse to read a connection string out of an `.env`, a production box is not reachable from here. The
@@ -81,8 +72,8 @@ spec is being written on unmeasured assumptions.
 The findings log needs `.scratch/<feature-slug>/`, so the slug gets chosen at the moment of maximum
 ignorance — before the map, before the survey, before a single question is answered. Slug the
 **outcome**, and let the mechanism stay unnamed: mechanisms are exactly what a grilling overturns.
-`email-language` survived the discovery that org timezone governs one of three emails and an
-explicit locale governs the other two; `email-language-by-org-timezone` was stale within the hour.
+`email-language` outlived the discovery that a different mechanism governed each of three emails;
+`email-language-by-org-timezone` was stale within the hour.
 A term already in the glossary is the safest choice available — it survived this scrutiny once.
 
 The name is load-bearing beyond the directory: the branch carries the same slug, and `/to-durable`

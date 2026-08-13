@@ -40,9 +40,8 @@ and stop. Do not invent a commit.
 ## Step 2 — Screen for secrets before staging anything
 
 Before running `git add`, inspect what would be staged and stop if anything looks like a secret.
-This is a hard gate: on a hit, ask the user and stage nothing until they answer. Automatic staging
-in Step 3 trades away the "you reviewed what's staged" safety step, so this screen runs first and
-hard-stops to cover for it.
+This is a hard gate: on a hit, ask the user and stage nothing until they answer. Step 3 stages
+everything without the user reviewing it, and the hard stop is what covers for that.
 
 **Filenames** (from `git status --porcelain`, tracked-modified and untracked alike):
 
@@ -105,8 +104,7 @@ would be reviewed together, merge them.
 
 - **Order top-level bullets by blast radius**, most consequential first: API-visible or behavioural
   changes affecting other callers, then data-integrity and security fixes, then internal refactors,
-  renames, tests, and docs. A flat unordered list reads as "too long" even when the real problem is
-  a missing hierarchy rather than excess content.
+  renames, tests, and docs.
 - **The top-level bullet states the change. Rationale, edge cases, and supporting detail nest
   underneath it** — so scanning the top level alone gives the risk-ranked shape of the whole commit.
 - **Match depth to size.** A one-file tweak needs no body. A single-concern change gets one bullet
@@ -148,9 +146,9 @@ or a convention a native reader would flag.
 
 - Prefer **specific** over vague. "improved the logic" says nothing; name what changed.
 - Do not claim tests were run unless the user said so.
-- If the staged diff mixes unrelated concerns — more likely now that staging is automatic, since a
-  stray edit sitting in the working tree gets swept in — either give them separate bullets or note
-  in one line that the commit mixes concerns. Do not block or refuse over it; just do not hide it.
+- If the staged diff mixes unrelated concerns — `git add -A` sweeps in any stray edit sitting in the
+  working tree — either give them separate bullets or note in one line that the commit mixes
+  concerns. Do not block or refuse over it; just do not hide it.
 
 ### Additional prompting
 
