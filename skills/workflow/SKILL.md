@@ -189,6 +189,23 @@ converts an otherwise-relevant context into a disposable one.
 The rest of the boundaries are genuine judgement calls. Ask the questions in order and take the
 first yes.
 
+## The branch
+
+**No skill in this chain creates it.** `/commit` commits to whatever branch is checked out, and
+`/implement` delegates to `/commit` — so with no explicit step, phase 4 lands its commits straight
+onto the integration branch.
+
+Create it as the **first action of phase 4**, before the first `/implement`, named by `vcs.md`'s
+convention over the feature slug.
+
+Not earlier: `/to-spec` re-checks the slug against the finished spec and renames on approval, which
+costs one `mv` only while no branch carries the old name. Not later: `/to-durable` derives its
+working directory by stripping the `<type>/` prefix off the branch name, and `/pr` computes scope
+from the merge base.
+
+Phases 1–3 write only to `.scratch/`, which is gitignored — so a survey that stops before phase 4
+leaves no branch to clean up.
+
 ## Working the tickets
 
 Tickets carry blocking edges. Work the **frontier** — any ticket whose blockers are all resolved,
