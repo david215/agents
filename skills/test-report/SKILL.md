@@ -32,12 +32,16 @@ largest avoidable context cost in a feature.
 That is a **precondition, not an implementation detail.** If this session cannot spawn subagents, say
 so and run in-context. Do not skip the run.
 
-Three rules bind it:
+Four rules bind it:
 
-- **One subagent, running the specs sequentially.** Never one per spec, never several at once.
-  Memory, not CPU, is the binding constraint on a monorepo, and a fan-out that looks like
-  parallelism is a machine outage. The tooling will encourage that fan-out; refuse it. One sequential
-  subagent has the same memory profile as running the specs here, which is the whole point.
+- **One subagent, running the repo's own commands.** Never one per spec, never several at once. Two
+  subagents each starting a suite share one machine and one dev database with nothing coordinating
+  them, and on a repo whose suites must be serialized that fan-out is a machine outage rather than
+  parallelism. The tooling will encourage it; refuse it.
+- **Parallelism *inside* the run is `testing.md`'s call, not yours.** Where a suite is safe at full
+  workers the repo's script already runs it that way, and adding `--runInBand` or a worker cap the doc
+  never asked for turns a seconds-long suite into a minutes-long one while proving nothing. Where the
+  doc does impose serialization, honour it exactly.
 - **On failure, return the failing suites' full output.** A row reading `❌ fail` with no stack trace
   sends the main context back to re-run the spec, and the delegation has saved nothing. Green suites
   cost one row each; red ones cost what you were going to need anyway.
@@ -138,8 +142,10 @@ thing. Fix it, then continue. Where the repo has no typecheck, say so in one lin
 
 ### 6. Run
 
-Follow `testing.md`. Do not batch spec files into one invocation when it says not to, and do not
-drop a heap flag or a worker limit because a run looked fine without it once.
+Follow `testing.md`, in both directions. Do not batch spec files into one invocation when it says not
+to, and do not drop a heap flag or a worker limit because a run looked fine without it once — but do
+not add one it does not ask for either. A constraint invented for safety costs the same wall-clock as
+a real one and catches nothing.
 
 Capture per-suite results as you go rather than at the end — a run that dies partway still owes the
 reader the rows it did finish.

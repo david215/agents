@@ -173,9 +173,10 @@ Nor in parallel across worktrees, however clean the ticket graph looks. A blocki
 whether B needs A's **output** — parallel branches need the stricter property that A and B never
 touch the same bytes, and `/to-tickets` does not compute it. Two tickets can be genuinely
 output-independent and still edit the same spec files, both deleting fixture lines from them.
-Parallel runs also multiply the test runner's
-resource footprint and share one dev database — a constraint `docs/agents/testing.md` records if
-anything does.
+Parallel runs also multiply the test runner's resource footprint and share one dev database. Whether
+that second cost is real is a repo fact rather than a general one — suites whose fixtures are mutually
+isolated run together fine — so read `docs/agents/testing.md` rather than assuming it either way. The
+same-bytes objection above stands whatever that file says.
 
 The reset is also what fires the ticket's **close-out** — `/test-report`, `/code-review`, `/commit`,
 the STATE.md write. Tickets run back to back in one window blur the boundary, and the close-out is
